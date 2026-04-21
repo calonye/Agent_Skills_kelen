@@ -1,0 +1,29 @@
+name: dialectical-self-review
+description: >-
+  在行动前对自己的方案做结构化自我反驳。
+  提取隐含假设 → 逐条反驳 → 反反驳 → 裁定 → 修正方案。
+  只读审查思考过程，输出辩证报告。
+inputs:
+  - name: proposal
+    type: string
+    description: 当前方案或决策的描述（可从对话上下文自动提取）
+    required: false
+  - name: focus
+    type: string
+    description: "审查重点：architecture / workflow / data / security / all"
+    default: "all"
+  - name: depth
+    type: string
+    description: "审查深度：quick（3个核心论点）/ standard（所有论点）/ deep（含子论点递归）"
+    default: "standard"
+outputs:
+  - name: dialectic_report
+    type: markdown
+    description: 辩证报告（论点 + 反驳 + 裁定 + 修正方案）
+tools_required:
+  - Read (审查对话上下文和已有文件)
+constraints:
+  - 不修改任何文件
+  - 不执行任何操作
+  - 每个论点必须有明确的 成立/推翻/修正 结论
+  - 辩护不住要老实承认

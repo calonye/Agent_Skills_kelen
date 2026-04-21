@@ -1,0 +1,32 @@
+name: adversarial-successor-audit
+description: >-
+  在项目交付/提交前，以新人接替者视角做全流程对抗性审计。
+  检验文档、脚本、工作流、依赖链、AI 可调用性。
+  只读审计，输出报告，不修改代码。
+inputs:
+  - name: project_root
+    type: string
+    description: 要审计的项目根目录路径
+    required: true
+  - name: scope
+    type: string
+    description: "full（全量）或 diff（仅增量改动）"
+    default: "full"
+  - name: focus
+    type: string
+    description: "审计重点：docs / scripts / workflow / ci / all"
+    default: "all"
+outputs:
+  - name: audit_report
+    type: markdown
+    description: 审计报告（发现列表 + 严重度 + 修正建议）
+tools_required:
+  - Read
+  - Execute (read-only commands only)
+  - Grep
+  - Glob
+  - LS
+constraints:
+  - 不修改任何文件
+  - 不执行写入操作
+  - 不执行 git commit / push

@@ -1,0 +1,37 @@
+name: skill-self-evolution
+description: >-
+  在对话进行中实时识别新掌握的方法论，
+  以第一性原理判断可复用性后转化为 skill 包或迭代现有 skill。
+  AI 的自我进化协议。
+inputs:
+  - name: conversation_context
+    type: string
+    description: 当前对话的上下文（自动从对话中提取）
+    required: false
+  - name: workspace
+    type: string
+    description: skill 工作空间路径
+    default: "/Users/kelen/Software/github-star/Agent_Skills_kelen"
+  - name: mode
+    type: string
+    description: "create（创建新 skill）/ iterate（迭代现有）/ auto（自动判断）"
+    default: "auto"
+outputs:
+  - name: evolution_report
+    type: markdown
+    description: 自我进化报告（识别 + 判断 + 执行结果）
+  - name: skill_package
+    type: directory
+    description: 新建或修改的 skill 目录
+tools_required:
+  - Read
+  - Create
+  - Edit
+  - Execute
+  - LS
+  - Grep
+  - Glob
+constraints:
+  - 必须通过 4 层第一性原理验证才转化
+  - 遵循 yao-meta-skill 规范
+  - 不修改非 skill 相关的项目文件
