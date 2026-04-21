@@ -84,8 +84,78 @@ Agent_Skills_kelen/
 
 ## 部署约定
 
-- 每个 skill 目录下需自行创建 `update.sh`（含本机路径，不入库），将内容同步到 `~/.claude/skills/<skill-name>/`
-- `~/.claude/skills/update-all.sh` 会自动扫描所有 `*/update.sh` 并执行批量更新
+每个 skill 需要一个本地 `update.sh` 脚本将内容同步到 AI 工具的 skill 目录。该脚本含本机绝对路径，因此不入库（已 gitignore），需自行创建。
+
+### 单个 skill 的 update.sh 模板
+
+在每个 skill 目录下创建 `update.sh`，将 `<YOUR_REPO_PATH>` 替换为你的本地仓库路径：
+
+```bash
+#!/bin/bash
+REPO_PATH="<YOUR_REPO_PATH>"          # 例如: /Users/yourname/projects/Agent_Skills_kelen
+SKILL_NAME="adversarial-successor-audit"  # 替换为对应 skill 名
+DST="$HOME/.claude/skills/$SKILL_NAME"
+
+if [ ! -d "$REPO_PATH/$SKILL_NAME" ]; then
+  echo "源目录不存在: $REPO_PATH/$SKILL_NAME"
+  exit 1
+fi
+
+mkdir -p "$DST"
+rsync -av --exclude='update.sh' "$REPO_PATH/$SKILL_NAME/" "$DST/"
+echo "$SKILL_NAME 已更新"
+```
+
+### 批量更新脚本 update-all.sh
+
+放在 `~/.claude/skills/update-all.sh`，自动扫描所有 skill 的 `update.sh` 并执行：
+
+```bash
+#!/bin/bash
+SKILLS_DIR="$HOME/.claude/skills"
+errors=0
+
+for update_script in "$SKILLS_DIR"/*/update.sh; do
+  [ -f "$update_script" ] || continue
+  skill_name=$(basename "$(dirname "$update_script")")
+  echo "Updating $skill_name..."
+  bash "$update_script" > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    echo "  $skill_name ✓"
+  else
+    echo "  $skill_name ✗"
+    errors=$((errors + 1))
+  fi
+done
+
+echo "Skill 更新完成 (errors: $errors)"
+```
+
+### 一键初始化
+
+克隆仓库后，运行以下命令为所有 skill 生成 `update.sh` 并部署：
+
+```bash
+REPO_PATH="$(pwd)"
+for skill_dir in */; do
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  skill_name="${skill_dir%/}"
+  cat > "$skill_dir/update.sh" <<EOF
+#!/bin/bash
+REPO_PATH="$REPO_PATH"
+SKILL_NAME="$skill_name"
+DST="\$HOME/.claude/skills/\$SKILL_NAME"
+[ ! -d "\$REPO_PATH/\$SKILL_NAME" ] && echo "源目录不存在" && exit 1
+mkdir -p "\$DST"
+rsync -av --exclude='update.sh' "\$REPO_PATH/\$SKILL_NAME/" "\$DST/"
+echo "\$SKILL_NAME 已更新"
+EOF
+  chmod +x "$skill_dir/update.sh"
+  bash "$skill_dir/update.sh"
+  echo "✓ $skill_name deployed"
+done
+```
+
 - **开发在本仓库进行**，通过 `update.sh` 发布到 AI 工具运行环境
 
 ## 技术规范

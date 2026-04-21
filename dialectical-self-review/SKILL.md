@@ -3,9 +3,16 @@ name: dialectical-self-review
 description: >-
   在行动前对自己的方案做结构化自我反驳（辩证自我审查）。
   提取隐含假设 → 逐条反驳 → 反反驳 → 第一性原理裁定 → 修正方案。
-  用于重要决策/提交/合并前，不可逆操作前，或用户要求「思辨一下」「对抗性审查你的思考」时。
-  触发词：思辨、辩证审查、自我反驳、对抗性思考、先想清楚、dialectical review。
-schedule: "重要决策前、不可逆操作前、多轮迭代后提交前"
+  用于重要决策/提交/合并前，不可逆操作前，或用户要求「思辨一下」时。
+  触发词：思辨、辩证审查、自我反驳、对抗性思考、先想清楚、dialectical review、
+  这个方案对吗、挑战你的想法、你确定吗、反驳自己、challenge your thinking、
+  质疑你的假设、before you act think、决策前审查、方案自检、
+  再想想、think twice、审视你的逻辑、检查假设、self-challenge。
+schedule: >-
+  重要决策前、不可逆操作前、多轮迭代后提交前、
+  架构选型前、删除/重构操作前、git push 前、
+  方案复杂度高时、用户表达犹豫或质疑时、
+  多个互相矛盾的需求需要取舍时
 metadata:
   author: kelen
   version: 0.1.0

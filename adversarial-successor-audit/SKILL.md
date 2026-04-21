@@ -4,8 +4,15 @@ description: >-
   在项目交付/提交前，以「有洁癖的新人接替者」视角做全流程对抗性审计。
   检验文档、脚本、钩子、工作流、依赖链、AI 可调用性是否对新人/新 AI 工具完全可用。
   不修改代码，只输出审计报告。
-  触发词：对抗性审计、接替者审查、新人模拟、交付前检查、successor audit。
-schedule: "项目交付前、大批量改动提交前、工作流重构后"
+  触发词：对抗性审计、接替者审查、新人模拟、交付前检查、successor audit、
+  交接检查、onboarding 验证、clone 后能跑通吗、项目健康检查、新人能上手吗、
+  project handover、bootstrap 验证、系统可用性审计、review as newcomer、
+  健壮性检查、走一遍流程、simulate fresh clone。
+schedule: >-
+  项目交付前、大批量改动提交前、工作流重构后、
+  新增自动化脚本后、接入新 AI 工具后、
+  合并到 main 前、项目交接前、CI/CD 流程变更后、
+  README 或 AGENTS.md 大幅修改后
 metadata:
   author: kelen
   version: 0.1.0

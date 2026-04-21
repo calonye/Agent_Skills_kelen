@@ -4,8 +4,16 @@ description: >-
   在对话进行中，实时识别自己新掌握的思维方法/推理模式/工作流，
   以第一性原理判断其可复用性，转化为可部署的 skill 包或迭代现有 skill。
   这是 AI 的自我进化协议 — 让每次深度对话的领悟不随 session 消亡。
-  触发词：自我进化、提炼技能、方法论转化、skill extraction、经验固化。
-schedule: "深度对话接近尾声时、用户要求'思辨你学到了什么'时、阶段性回顾时"
+  触发词：自我进化、提炼技能、方法论转化、skill extraction、经验固化、
+  这次学到了什么、有什么可以复用的、总结方法论、固化经验、
+  extract learnings、what did you learn、把方法变成技能、能力沉淀、
+  转化为技能、沉淀经验、学到的东西、distill methodology、capture pattern。
+schedule: >-
+  深度对话接近尾声时、用户要求'思辨你学到了什么'时、阶段性回顾时、
+  连续多轮迭代后发现反复使用同一判断框架时、
+  用户明确教导了一种思维方式时、
+  解决了复杂问题后准备收工时、
+  发现自己用了一个之前不具备的推理模式时
 metadata:
   author: kelen
   version: 0.1.0
