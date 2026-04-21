@@ -54,7 +54,7 @@ Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `des
 
 ### 开发新 Skill
 
-参见 [Docs/开发指导规范.md](./Docs/开发指导规范.md)。
+参见 `Docs/开发指导规范.md`（本地私有，不入库）。
 
 ## 目录结构
 
@@ -64,28 +64,27 @@ Agent_Skills_kelen/
 ├── LICENSE                                # MIT 协议
 ├── CHANGELOG.md                           # 变更日志
 ├── .gitignore
-├── Docs/                                  # 工作空间级文档
-│   └── 开发指导规范.md                      # Skill 开发约定（Steering 文档）
+├── Docs/                                  # (git-ignored) 内部设计文档
 ├── adversarial-successor-audit/           # Skill: 对抗性接替者审计
 │   ├── SKILL.md                           #   路由 + 流程骨架
 │   ├── agents/interface.yaml              #   接口声明
 │   ├── references/                        #   审计清单、子模式、案例
-│   └── update.sh                          #   部署同步脚本
+│   └── update.sh                          #   (git-ignored) 本地部署脚本
 ├── dialectical-self-review/               # Skill: 辩证自我审查
 │   ├── SKILL.md
 │   ├── agents/interface.yaml
 │   ├── references/                        #   辩证协议、第一性原理、案例
-│   └── update.sh
+│   └── update.sh                          #   (git-ignored)
 └── skill-self-evolution/                  # Skill: 技能自我进化
     ├── SKILL.md
     ├── agents/interface.yaml
     ├── references/                        #   进化判据、工作空间规范、案例
-    └── update.sh
+    └── update.sh                          #   (git-ignored)
 ```
 
 ## 部署约定
 
-- 每个 skill 目录下有 `update.sh`，将本工作空间的内容同步到 `~/.claude/skills/<skill-name>/`
+- 每个 skill 目录下需自行创建 `update.sh`（含本机路径，不入库），将内容同步到 `~/.claude/skills/<skill-name>/`
 - `~/.claude/skills/update-all.sh` 会自动扫描所有 `*/update.sh` 并执行批量更新
 - **开发在本仓库进行**，通过 `update.sh` 发布到 AI 工具运行环境
 
