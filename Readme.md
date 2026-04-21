@@ -1,4 +1,4 @@
-# Agent-Skills
+# Agent_Skills_kelen
 
 > AI Agent 思维技能孵化工作空间 — 将深度对话中的方法论提炼为可复用的结构化技能。
 
@@ -34,8 +34,8 @@ skill-self-evolution ──→ 识别 + 判断 + 转化为新 skill
 
 ```bash
 # 克隆仓库
-git clone https://github.com/calonye/Agent-Skills.git
-cd Agent-Skills
+git clone https://github.com/calonye/Agent_Skills_kelen.git
+cd Agent_Skills_kelen
 
 # 部署单个 skill 到 Claude Code
 bash adversarial-successor-audit/update.sh
@@ -59,7 +59,7 @@ Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `des
 ## 目录结构
 
 ```
-Agent-Skills/
+Agent_Skills_kelen/
 ├── Readme.md                              # 本文件
 ├── LICENSE                                # MIT 协议
 ├── CHANGELOG.md                           # 变更日志
