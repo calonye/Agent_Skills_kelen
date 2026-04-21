@@ -56,6 +56,74 @@ Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `des
 
 参见 `Docs/开发指导规范.md`（本地私有，不入库）。
 
+## AI 对话环境集成
+
+在 AI 对话（Claude Code / Factory Droid / Cursor 等）中，可以让 AI 自动完成 skill 的安装和配置。以下提供两种方式。
+
+### 方式一：提示词模板（推荐）
+
+将以下内容直接发送给 AI，它会自动执行安装部署：
+
+**Claude Code 环境：**
+
+> 请帮我安装 Agent_Skills_kelen 思维技能包：
+> 1. 将仓库 https://github.com/calonye/Agent_Skills_kelen.git 克隆到 ~/Agent_Skills_kelen
+> 2. 将所有含 SKILL.md 的子目录同步到 ~/.claude/skills/（排除 update.sh）
+> 3. 为每个 skill 生成 update.sh 同步脚本
+> 4. 验证部署结果：列出 ~/.claude/skills/ 下已安装的 skill
+
+**Factory Droid 环境：**
+
+> 请帮我安装 Agent_Skills_kelen 思维技能包：
+> 1. 将仓库 https://github.com/calonye/Agent_Skills_kelen.git 克隆到本地
+> 2. 阅读每个 skill 的 SKILL.md，将其转换为 droid 配置文件
+> 3. 将 droid 配置部署到 ~/.factory/droids/ 或项目下的 .factory/droids/
+
+**其他 AI 工具（Cursor / Windsurf 等）：**
+
+> 请帮我安装 Agent_Skills_kelen 思维技能包：
+> 1. 将仓库 https://github.com/calonye/Agent_Skills_kelen.git 克隆到本地
+> 2. 将所有含 SKILL.md 的子目录同步到该工具的 skill/规则 目录
+> 3. 验证 AI 能根据触发词自动路由到对应 skill
+
+### 方式二：一键脚本
+
+在 AI 对话中让 AI 执行以下命令：
+
+```bash
+# 默认部署到 ~/.claude/skills/
+curl -fsSL https://raw.githubusercontent.com/calonye/Agent_Skills_kelen/main/install.sh | bash
+
+# 自定义 skill 目录（适配非 Claude Code 环境）
+SKILL_DIR=~/.cursor/skills curl -fsSL https://raw.githubusercontent.com/calonye/Agent_Skills_kelen/main/install.sh | bash
+
+# 自定义仓库本地路径
+INSTALL_DIR=~/projects/Agent_Skills_kelen curl -fsSL https://raw.githubusercontent.com/calonye/Agent_Skills_kelen/main/install.sh | bash
+```
+
+脚本会自动完成：clone/pull 仓库 → 部署所有 skill → 生成 update.sh → 创建 update-all.sh。
+
+### 各 AI 工具的 Skill 目录约定
+
+| AI 工具 | 默认 Skill 目录 | 说明 |
+|---------|-----------------|------|
+| Claude Code | `~/.claude/skills/` | 原生支持 SKILL.md 路由匹配 |
+| Factory Droid | `.factory/droids/` 或 `~/.factory/droids/` | 需将 SKILL.md 转换为 droid YAML 配置 |
+| Cursor | `~/.cursor/rules/` 或项目 `.cursor/rules/` | 将 SKILL.md 内容作为规则文件导入 |
+| 其他工具 | 自定义 | 设置 `SKILL_DIR` 环境变量后使用一键脚本 |
+
+### 验证安装
+
+安装完成后，在 AI 对话中尝试以下触发词：
+
+```
+「帮我检查一下别人拿到这个项目能不能跑起来」  → adversarial-successor-audit
+「思辨一下」                                  → dialectical-self-review
+「提炼技能」                                  → skill-self-evolution
+```
+
+如果 AI 自动进入对应 skill 的流程，说明安装成功。
+
 ## 目录结构
 
 ```
@@ -63,6 +131,7 @@ Agent_Skills_kelen/
 ├── Readme.md                              # 本文件
 ├── LICENSE                                # MIT 协议
 ├── CHANGELOG.md                           # 变更日志
+├── install.sh                             # 一键安装脚本（入库）
 ├── .gitignore
 ├── Docs/                                  # (git-ignored) 内部设计文档
 ├── adversarial-successor-audit/           # Skill: 对抗性接替者审计

@@ -2,6 +2,14 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.4.0] - 2026-04-21
+
+### 新增 (Added)
+
+- 新增「AI 对话环境集成」章节：提示词模板 + 一键脚本双轨安装方式 (Add AI dialog environment integration guide)
+- 新增 `install.sh` 一键安装脚本，支持 SKILL_DIR/INSTALL_DIR 环境变量适配多工具 (Add install.sh with env var support)
+- 支持 Claude Code / Factory Droid / Cursor 等多 AI 工具的安装说明 (Multi-tool install instructions)
+
 ## [0.3.0] - 2026-04-21
 
 ### 新增 (Added)
