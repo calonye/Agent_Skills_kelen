@@ -2,6 +2,23 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.0] - 2026-04-23
+
+### 新增 (Added)
+
+- 新增 skill: `env-sync-maintainer-kelen`（环境同步维护）— 多 AI 工具环境配置同步与 Skill 自愈 (Add skill: env-sync-maintainer-kelen)
+- `skill-self-evolution-kelen` 增加用户决策机制（至少 5 项选择，最后一项为补充说明）(Add user decision mechanism to skill-self-evolution-kelen)
+- `skill-self-evolution-kelen` 融合 yao-meta-skill 和 skill-creator 设计模式 (Integrate design patterns from yao-meta-skill and skill-creator)
+- `~/.factory/rules/skill-routing.md` 增加上下文路由（状态感知、决策风险、交付验收触发）(Add contextual routing to skill-routing.md)
+- `Docs/开发指导规范.md` 融合 ModuleDesign 规范（渐进式披露、紧凑原则、规则与说明分离、内容净化规范）(Integrate ModuleDesign standards into dev guidelines)
+
+### 变更 (Changed)
+
+- 所有 skill 命名加 `-kelen` 后缀水印 (Add -kelen suffix to all skill names)
+- 清理所有 SKILL.md 中的无实质内容（移除 origin 字段、心路历程、非权威引用）(Clean up non-essential content from all SKILL.md files)
+- `Readme.md` 致谢段落精简，移除特定对话引用 (Simplify acknowledgments in Readme.md)
+- 更新 `Docs/开发指导规范.md` 至 v0.3.0，增加 frontmatter 设计规范、触发词覆盖要求 (Update dev guidelines to v0.3.0)
+
 ## [0.4.0] - 2026-04-21
 
 ### 新增 (Added)

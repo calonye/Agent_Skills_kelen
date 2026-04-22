@@ -1,5 +1,5 @@
 ---
-name: dialectical-self-review
+name: dialectical-self-review-kelen
 description: >-
   在行动前对自己的方案做结构化自我反驳（辩证自我审查）。
   提取隐含假设 → 逐条反驳 → 反反驳 → 第一性原理裁定 → 修正方案。
@@ -25,7 +25,6 @@ schedule: >-
 metadata:
   author: kelen
   version: 0.1.0
-  origin: "从 Cli-Proxy-API-Management-Center-fork 仓库规则建设对话中提炼"
 ---
 
 # 辩证自我审查 / Dialectical Self-Review

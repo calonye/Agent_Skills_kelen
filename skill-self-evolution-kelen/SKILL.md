@@ -1,5 +1,5 @@
 ---
-name: skill-self-evolution
+name: skill-self-evolution-kelen
 description: >-
   在对话进行中，实时识别自己新掌握的思维方法/推理模式/工作流，
   以第一性原理判断其可复用性，转化为可部署的 skill 包或迭代现有 skill。
@@ -26,7 +26,6 @@ schedule: >-
 metadata:
   author: kelen
   version: 0.1.0
-  origin: "用户在 Cli-Proxy-API-Management-Center-fork 对话中明确教导的自我进化指令"
 ---
 
 # 技能自我进化 / Skill Self-Evolution
@@ -89,24 +88,59 @@ metadata:
 **4 层全通过 → 转化为新 skill 或迭代现有 skill**
 **某层不通过 → 记为 brain 笔记或直接跳过（注明原因）**
 
-### 步骤 ③ 转化：创建或迭代
+### 步骤 ③ 转化：创建或迭代（必须经用户决策）
 
-**创建新 skill（当唯一性判断为「非重叠」时）：**
+**前置：向用户呈现决策选项。** 对每个通过 4 层验证的方法论，必须主动给出至少 5 项选择供用户决策，不得自行决定转化方式：
 
-1. 在工作空间创建目录：`Agent_Skills_kelen/<skill-name>/`
-2. 遵循 yao-meta-skill 规范：
-   - `SKILL.md`：路由 + 流程骨架（frontmatter 含 name/description/metadata）
+```markdown
+### 候选方法论 N: <名称>
+- 定义：<一句话描述>
+- 4 层验证：全部通过
+
+请选择处理方式：
+[1] 直接转化为新 skill（基于当前定义生成 SKILL.md 骨架）
+[2] 迭代现有 skill（选择：adversarial-successor-audit-kelen / dialectical-self-review-kelen / skill-self-evolution-kelen / env-sync-maintainer-kelen）
+[3] 记录为 brain 笔记（方法论有效但暂不值得独立成 skill）
+[4] 跳过（不值得保留，简述原因）
+[5] 补充或修正说明（请描述你的想法，我会根据你的反馈调整方向）
+```
+
+用户选择后，按选定路径执行：
+
+**路径 1：创建新 skill**
+
+1. 在工作空间创建目录：`Agent_Skills_kelen/<skill-name>-kelen/`
+2. 按以下结构组织：
+   - `SKILL.md`：路由 + 流程骨架
+     - frontmatter 必含 `name`、`description`（触发场景）、`metadata`（author/version）
+     - description 字段精确描述触发场景（路由匹配核心），包含用户口语触发词 + AI 自我思考触发词
+     - 流程步骤保持最小化，详细内容引用 `references/`
    - `agents/interface.yaml`：接口声明
    - `references/`：详解、判据、案例
-   - `update.sh`：同步脚本
-3. description 字段精确描述触发场景（这是路由匹配的核心）
+3. 融合以下设计模式：
+   - **渐进式披露**：SKILL.md 主文件 ≤ 500 行，长内容拆到 `references/`
+   - **紧凑原则**：列表项间无空行、符号替代冗余词、禁用表格
+   - **规则与说明分离**：SKILL.md 给 AI，README.md 给人类
+   - **触发词覆盖**：同时覆盖用户口语和 AI 推理过程中的自动触发
 
-**迭代现有 skill（当唯一性判断为「有重叠可增强」时）：**
+**路径 2：迭代现有 skill**
 
 1. 读取现有 skill 的 SKILL.md
 2. 识别增量：新流程步骤？新参考文档？新案例？
 3. 最小化修改，不破坏现有结构
 4. 版本号 patch +1
+
+**路径 3：记录为 brain**
+
+记录到 `~/.brain/` 或对话中提及的笔记系统。
+
+**路径 4：跳过**
+
+记录跳过原因，不产出任何文件。
+
+**路径 5：补充说明**
+
+等待用户输入后，重新进入步骤 ② 判断。
 
 ### 步骤 ④ 部署验证
 

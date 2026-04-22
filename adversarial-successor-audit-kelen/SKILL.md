@@ -1,5 +1,5 @@
 ---
-name: adversarial-successor-audit
+name: adversarial-successor-audit-kelen
 description: >-
   在项目交付/提交前，以「有洁癖的新人接替者」视角做全流程对抗性审计。
   检验文档、脚本、钩子、工作流、依赖链、AI 可调用性是否对新人/新 AI 工具完全可用。
@@ -24,7 +24,6 @@ schedule: >-
 metadata:
   author: kelen
   version: 0.1.0
-  origin: "从 Cli-Proxy-API-Management-Center-fork 仓库规则建设对话中提炼"
 ---
 
 # 对抗性接替者审计 / Adversarial Successor Audit

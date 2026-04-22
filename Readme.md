@@ -4,7 +4,7 @@
 
 ## 项目概述
 
-本仓库是个人 AI Agent Skill 的孵化与迭代空间。每个 skill 是一个独立的方法论包，遵循 [yao-meta-skill](https://github.com/anthropics/yao-meta-skill) 规范，可部署到 Claude Code / Codex 等 AI 工具的 skill 系统中。
+本仓库是个人 AI Agent Skill 的孵化与迭代空间。每个 skill 是一个独立的方法论包，可部署到 Claude Code / Factory Droid 等 AI 工具的 skill 系统中。
 
 **核心理念**：AI 在深度对话中会领悟新的思维方式和工作方法，但这些领悟会随 session 结束而消亡。本项目将这些方法论结构化、固化为可复用的 skill 包，让 AI 具备持续自我进化的能力。
 
@@ -12,9 +12,10 @@
 
 | 技能 | 描述 | 版本 | 状态 |
 |------|------|------|------|
-| [adversarial-successor-audit](./adversarial-successor-audit/) | 以「有洁癖的新人接替者」视角做全流程对抗性审计 | v0.1.0 | 可用 |
-| [dialectical-self-review](./dialectical-self-review/) | 在行动前对自己的方案做结构化自我反驳 | v0.1.0 | 可用 |
-| [skill-self-evolution](./skill-self-evolution/) | 从对话中实时识别方法论并转化为可部署的 skill 包 | v0.1.0 | 可用 |
+| [adversarial-successor-audit-kelen](./adversarial-successor-audit-kelen/) | 以「有洁癖的新人接替者」视角做全流程对抗性审计 | v0.2.0 | 可用 |
+| [dialectical-self-review-kelen](./dialectical-self-review-kelen/) | 在行动前对自己的方案做结构化自我反驳 | v0.2.0 | 可用 |
+| [skill-self-evolution-kelen](./skill-self-evolution-kelen/) | 从对话中实时识别方法论并转化为可部署的 skill 包 | v0.2.0 | 可用 |
+| [env-sync-maintainer-kelen](./env-sync-maintainer-kelen/) | 维护多 AI 工具环境的配置同步与 Skill 自愈 | v0.1.0 | 可用 |
 
 ### 技能关系
 
@@ -133,22 +134,22 @@ Agent_Skills_kelen/
 ├── CHANGELOG.md                           # 变更日志
 ├── install.sh                             # 一键安装脚本（入库）
 ├── .gitignore
-├── Docs/                                  # (git-ignored) 内部设计文档
-├── adversarial-successor-audit/           # Skill: 对抗性接替者审计
+├── Docs/                                  # 内部设计文档（不入库）
+├── adversarial-successor-audit-kelen/     # Skill: 对抗性接替者审计
 │   ├── SKILL.md                           #   路由 + 流程骨架
 │   ├── agents/interface.yaml              #   接口声明
-│   ├── references/                        #   审计清单、子模式、案例
-│   └── update.sh                          #   (git-ignored) 本地部署脚本
-├── dialectical-self-review/               # Skill: 辩证自我审查
+│   └── references/                        #   审计清单、子模式、案例
+├── dialectical-self-review-kelen/         # Skill: 辩证自我审查
 │   ├── SKILL.md
 │   ├── agents/interface.yaml
-│   ├── references/                        #   辩证协议、第一性原理、案例
-│   └── update.sh                          #   (git-ignored)
-└── skill-self-evolution/                  # Skill: 技能自我进化
+│   └── references/                        #   辩证协议、第一性原理、案例
+├── skill-self-evolution-kelen/            # Skill: 技能自我进化
+│   ├── SKILL.md
+│   ├── agents/interface.yaml
+│   └── references/                        #   进化判据、工作空间规范、案例
+└── env-sync-maintainer-kelen/             # Skill: 环境同步维护
     ├── SKILL.md
-    ├── agents/interface.yaml
-    ├── references/                        #   进化判据、工作空间规范、案例
-    └── update.sh                          #   (git-ignored)
+    └── references/                        #   同步模式、自愈算法
 ```
 
 ## 部署约定
@@ -236,8 +237,7 @@ done
 
 ## 致谢
 
-- [yao-meta-skill](https://github.com/anthropics/yao-meta-skill) — Skill 工程方法论框架
-- 本项目中的方法论提炼自 [Cli-Proxy-API-Management-Center-fork](https://github.com/calonye/Cli-Proxy-API-Management-Center-fork) 的 AI 协作规则建设对话
+- [yao-meta-skill](https://github.com/anthropics/yao-meta-skill) — Skill 工程方法论框架参考
 
 ## 协议
 
