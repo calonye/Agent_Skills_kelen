@@ -22,11 +22,13 @@
 ```
 对话产生领悟
       ↓
-skill-self-evolution ──→ 识别 + 判断 + 转化为新 skill
-      ↑                          ↓
-      └── dialectical-self-review ←── 辩证审查发现新模式
-                                          ↓
-                              adversarial-successor-audit ←── 交付前审计
+skill-self-evolution-kelen ──→ 识别 + 判断 + 转化为新 skill
+      ↑                                    ↓
+      └── dialectical-self-review-kelen ←── 辩证审查发现新模式
+                                              ↓
+                                  adversarial-successor-audit-kelen ←── 交付前审计
+
+env-sync-maintainer-kelen ──→ 多环境同步与自愈（独立运行，保持所有环境一致）
 ```
 
 ## 快速开始
@@ -49,9 +51,10 @@ bash adversarial-successor-audit/update.sh
 
 Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `description` 字段自动路由匹配。触发方式：
 
-- **adversarial-successor-audit**：说「对抗性审计」「新人模拟」「交付前检查」
-- **dialectical-self-review**：说「思辨一下」「对抗性审查你的思考」「先想清楚再做」
-- **skill-self-evolution**：说「提炼技能」「这次对话学到了什么」「方法论转化」
+- **adversarial-successor-audit-kelen**：说「对抗性审计」「新人模拟」「交付前检查」
+- **dialectical-self-review-kelen**：说「思辨一下」「对抗性审查你的思考」「先想清楚再做」
+- **skill-self-evolution-kelen**：说「提炼技能」「这次对话学到了什么」「方法论转化」
+- **env-sync-maintainer-kelen**：说「同步一下配置」「两边不一样了」「修复 skill 列表」
 
 ### 开发新 Skill
 
@@ -118,9 +121,10 @@ INSTALL_DIR=~/projects/Agent_Skills_kelen curl -fsSL https://raw.githubuserconte
 安装完成后，在 AI 对话中尝试以下触发词：
 
 ```
-「帮我检查一下别人拿到这个项目能不能跑起来」  → adversarial-successor-audit
-「思辨一下」                                  → dialectical-self-review
-「提炼技能」                                  → skill-self-evolution
+「帮我检查一下别人拿到这个项目能不能跑起来」  → adversarial-successor-audit-kelen
+「思辨一下」                                  → dialectical-self-review-kelen
+「提炼技能」                                  → skill-self-evolution-kelen
+「同步一下配置」                              → env-sync-maintainer-kelen
 ```
 
 如果 AI 自动进入对应 skill 的流程，说明安装成功。
@@ -146,7 +150,7 @@ Agent_Skills_kelen/
 ├── skill-self-evolution-kelen/            # Skill: 技能自我进化
 │   ├── SKILL.md
 │   ├── agents/interface.yaml
-│   └── references/                        #   进化判据、工作空间规范、案例
+│   └── references/                        #   进化判据、工作空间规范、设计原则、案例
 └── env-sync-maintainer-kelen/             # Skill: 通用环境适配与自愈
     ├── SKILL.md
     └── references/
@@ -165,8 +169,8 @@ Agent_Skills_kelen/
 
 ```bash
 #!/bin/bash
-REPO_PATH="<YOUR_REPO_PATH>"          # 例如: /Users/yourname/projects/Agent_Skills_kelen
-SKILL_NAME="adversarial-successor-audit"  # 替换为对应 skill 名
+REPO_PATH="<YOUR_REPO_PATH>"          # 例如: $HOME/Agent_Skills_kelen
+SKILL_NAME="adversarial-successor-audit-kelen"  # 替换为对应 skill 名
 DST="$HOME/.claude/skills/$SKILL_NAME"
 
 if [ ! -d "$REPO_PATH/$SKILL_NAME" ]; then

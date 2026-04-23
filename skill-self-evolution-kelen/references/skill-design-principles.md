@@ -108,3 +108,19 @@ Skill 触发依赖两层协作，缺一不可：
 - **第 1 层**（metadata）：name + description，始终在上下文中（~100 tokens）
 - **第 2 层**（SKILL.md body）：skill 触发时加载（≤ 500 行）
 - **第 3 层**（references/）：按需加载（无限制）
+
+## 验证原则
+
+Skill 设计和部署后必须验证，否则等于没做：
+
+1. **改了规则 ≠ 改了行为**：规则写进文件后，必须在新环境/session 中验证行为是否变化，否则等于没改。
+2. **同步后必须做一致性检查**：自动同步脚本跑过了不等于同步成功。同步后必须 checksum 比对两端内容一致。
+3. **命名变更后做全链条搜索一致性验证**：重命名 skill 后，从 `name` 字段 → 目录名 → interface.yaml → 路由规则 → Readme 触发词，全链条必须一致。用 `rg` 搜索旧名确认无遗漏。
+
+## 交叉引用规范
+
+每个 skill 的 SKILL.md 应包含与其他 skill 的功能边界和交叉触发关系：
+
+- 在核心流程中标注「交叉引用」：当某个步骤可以或应该触发另一个 skill 时，明确写出来
+- 在「不做什么」段落中标注功能边界：明确本 skill 不做什么、该用哪个 skill
+- 三个核心 skill 形成闭环：`skill-self-evolution`（提炼）→ `dialectical-self-review`（思辨验证）→ `adversarial-successor-audit`（交付审计）
