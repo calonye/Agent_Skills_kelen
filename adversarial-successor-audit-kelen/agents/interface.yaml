@@ -1,4 +1,4 @@
-name: adversarial-successor-audit
+name: adversarial-successor-audit-kelen
 description: >-
   在项目交付/提交前，以新人接替者视角做全流程对抗性审计。
   检验文档、脚本、工作流、依赖链、AI 可调用性。

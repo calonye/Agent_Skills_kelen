@@ -55,7 +55,7 @@ Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `des
 
 ### 开发新 Skill
 
-参见 `Docs/开发指导规范.md`（本地私有，不入库）。
+遵循仓库内各 skill 的 `SKILL.md` 和 `references/skill-design-principles.md` 中的设计规范。
 
 ## AI 对话环境集成
 
@@ -134,7 +134,7 @@ Agent_Skills_kelen/
 ├── CHANGELOG.md                           # 变更日志
 ├── install.sh                             # 一键安装脚本（入库）
 ├── .gitignore
-├── Docs/                                  # 内部设计文档（不入库）
+├── Docs/                                  # 开发指导规范（gitignore，不入库）
 ├── adversarial-successor-audit-kelen/     # Skill: 对抗性接替者审计
 │   ├── SKILL.md                           #   路由 + 流程骨架
 │   ├── agents/interface.yaml              #   接口声明

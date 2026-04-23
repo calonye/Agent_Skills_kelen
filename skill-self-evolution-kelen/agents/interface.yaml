@@ -1,4 +1,4 @@
-name: skill-self-evolution
+name: skill-self-evolution-kelen
 description: >-
   在对话进行中实时识别新掌握的方法论，
   以第一性原理判断可复用性后转化为 skill 包或迭代现有 skill。
@@ -11,7 +11,7 @@ inputs:
   - name: workspace
     type: string
     description: skill 工作空间路径
-    default: "/Users/kelen/Software/github-star/Agent_Skills_kelen"
+    default: ""
   - name: mode
     type: string
     description: "create（创建新 skill）/ iterate（迭代现有）/ auto（自动判断）"

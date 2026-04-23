@@ -30,7 +30,7 @@ Agent_Skills_kelen/                  # 工作空间根目录
 
 ```bash
 #!/bin/bash
-REPO_PATH="/Users/kelen/Software/github-star/Agent_Skills_kelen"
+REPO_PATH="$HOME/Agent_Skills_kelen"
 SKILL_NAME="<skill-name>"
 DST="$HOME/.claude/skills/$SKILL_NAME"
 
