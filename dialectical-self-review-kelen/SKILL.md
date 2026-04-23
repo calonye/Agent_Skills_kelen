@@ -116,13 +116,10 @@ metadata:
 <完整的修正版方案>
 ```
 
-## 与其他 skill 的闭环
+## 相关技能
 
-- 辩证审查过程中如果发现了可复用的新判断框架，应触发 `skill-self-evolution` 将其固化为 skill
-- 如果修正方案涉及可交付物（代码合并、项目交付），建议触发 `adversarial-successor-audit` 做可交付性检查
-
-**辩证审查 → 发现新模式 → skill-self-evolution → 新 skill → 下次辩证审查时使用**
-**辩证审查 → 修正方案涉及交付 → adversarial-successor-audit → 交付前审计**
+- `skill-self-evolution-kelen`：辩证审查中发现的可复用判断框架，可固化为新 skill
+- `adversarial-successor-audit-kelen`：修正方案涉及交付时，可做交付前审计
 
 ## 不做什么
 
