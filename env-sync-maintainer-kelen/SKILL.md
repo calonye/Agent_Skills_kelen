@@ -1,88 +1,83 @@
 ---
 name: env-sync-maintainer-kelen
 description: >-
-  维护和同步多 AI 工具环境（如 Claude Code / Factory Droid）的配置、规则和 Skills。
-  自动检测并修复「单源维护」架构下的漂移、注册表损坏和路径不一致。
+  维护多 AI 工具环境的配置同步与 Skill 自愈。
+  识别当前 AI 工具的 skill 存放位置和格式，从上游源建立同步机制，
+  植入自愈逻辑（注册表校验、磁盘扫描、一致性检查）。
   触发场景（用户口语）：
-  「同步一下我的 claude 和 factory 配置」两边不一样了
-  「修复一下 skill 列表」「update-all 报错了」
-  「新建的 skill 怎么没有生效」
+  「同步一下配置」「两边不一样了」「修复一下 skill 列表」
+  「update-all 报错了」「新建的 skill 怎么没有生效」
+  「帮我把这个 skill 同步到另一个工具里」
   触发场景（AI 自我思考）：
-  「检测到 ~/.factory/skills 和 ~/.claude/skills 不一致」
-  「update-all.sh 找不到某个 skill」
-  「需要创建一个适配不同环境的同步脚本」
-  关键词：环境同步、配置漂移、skill 注册、update-all 修复、单源维护。
+  「当前环境的 skill 目录与上游不一致」
+  「检测到新的 AI 工具环境，需要建立同步机制」
+  「注册表（update-all 脚本）可能已损坏，需要自愈」
+  关键词：环境同步、配置漂移、skill 注册、update-all 修复、自愈、适配。
 metadata:
   author: kelen
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # 环境同步维护者 / Env Sync Maintainer
 
 确保你的 AI 工具配置在所有环境中保持一致，且永不腐烂。
 
-**核心理念：**
-- **单源维护**：`~/.claude/` 是唯一真相源（Upstream），下游通过软链接或同步脚本获取。
-- **自愈机制**：`update-all.sh` 不依赖手工注册表，而是通过磁盘扫描（是否有 `update.sh`）和模板一致性检查自动修复。
+**核心理念（不绑定任何具体工具）：**
+- **单源维护**：选定一个上游源，下游通过同步机制获取
+- **自愈机制**：注册表不依赖手工维护，通过磁盘扫描和一致性检查自动修复
 
 ## 何时使用
 
-- 配置了多个 AI 工具（如 Claude + Factory），发现行为不一致。
-- 新增或删除 Skill 后，`update-all.sh` 没有自动识别。
-- `update-all.sh` 运行报错或卡住。
-- 需要为新环境搭建同步机制。
+- 配置了多个 AI 工具，发现行为不一致
+- 新增或删除 Skill 后，注册表没有自动识别
+- 注册表（update-all 脚本）运行报错
+- 需要为新工具/环境搭建同步机制
+- AI 发现自己运行在未见过的环境中
 
-## 流程
+## 通用流程
 
-### 1. 环境诊断
+### 1. 识别当前环境
 
-先摸清当前状态：
-- **上游 (Source)**: 检查 `~/.claude/skills/` 和 `~/.claude/scripts/`
-- **下游 (Target)**: 检查 `~/.factory/skills` (软链接？rsync？)
-- **注册表**: 检查 `update-all.sh` 的逻辑（是写死列表还是通配符？）
+不假设任何具体工具，从当前上下文推断：
+- 当前 AI 工具是什么？（名称、版本）
+- Skill 存放位置和格式是什么？
+- 是否有已知的适配方案？（见 `references/adapters/`）
 
-### 2. 搭建单源架构
+### 2. 确定上游源
 
-如果目标环境还没有接入上游，搭建适配层：
+- Skill 的源头在哪里？（本地仓库 / git repo / 任意目录）
+- 上游使用什么格式？（SKILL.md / droid YAML / 纯文本规则）
+- 上游如何管理版本？（git / 手动）
 
-**方案 A：软链接 (推荐)**
-```bash
-# 如果目标环境支持读取软链接
-ln -s ~/.claude/skills ~/.factory/skills
-```
+### 3. 建立同步机制
 
-**方案 B：同步脚本 (如 Factory 不支持链接)**
-创建一个 `factory_sync_daemon.py`，在 SessionStart 时运行：
-1. `rsync` 脚本文件
-2. 适配路径（将 `.claude` 替换为 `.factory`）
-3. 验证软链接有效性
+根据当前环境选择最合适的方案：
 
-详见 `references/sync-patterns.md`。
+- **软链接**（最简单）：若工具支持读取软链接 → 直接链接上游目录
+- **同步脚本**（最灵活）：rsync + 路径适配 → 按需转换格式
+- **直接复制**（最兼容）：不依赖任何特殊机制，但维护成本最高
 
-### 3. 自愈机制植入
+### 4. 植入自愈
 
-修改 `skill_update_scheduler.py` 或 `update-all.sh` 的生成逻辑：
+注册表不应依赖手工维护，而是通过以下机制自动修复：
 
-1. **磁盘扫描替代注册表**：不要从 `update-all.sh` 解析已注册 skill，直接扫描目录：
-   ```python
-   # 已注册 = 目录存在 且 update.sh 存在
-   registered = {d.name for d in skills_dir.iterdir() if d.is_dir() and (d / "update.sh").exists()}
-   ```
+1. **磁盘扫描替代注册表解析**：
+   - 不要从注册表脚本中解析已注册 skill
+   - 直接扫描目录：存在 SKILL.md 即为有效 skill，存在 update.sh 即为已注册
 
-2. **一致性检查替代重建**：`update-all.sh` 内容是确定性的（通配符模式），不需要每次重建，只需检查是否与模板一致：
-   ```python
-   TEMPLATE = "...通配符脚本..."
-   if UPDATE_SCRIPT.read_text() != TEMPLATE:
-       tmp.rename(UPDATE_SCRIPT) # 原子写入修复
-   ```
+2. **一致性检查替代每次重建**：
+   - 注册表脚本的内容应是确定性的（如通配符模式）
+   - 只需检查当前内容是否与模板一致，不一致时才修复
 
-3. **原子写入**：所有修复操作（生成 `update.sh`、修复 `update-all.sh`）都使用 `write_to_tmp + rename`，防止进程中断导致文件损坏。
+3. **原子写入**：
+   - 所有修复操作使用写临时文件 + rename，防止进程中断导致文件损坏
 
-### 4. 验证与发布
+## 适配案例
 
-- 运行 `python3 skill_update_scheduler.py`（或手动触发）
-- 检查 `~/.claude/cache/skill-update-state.json`，确认 `last_status: success`
-- 在两个环境中分别运行同一 Skill，确认行为一致
+具体的工具/环境适配方案见 `references/adapters/` 目录：
+- `claude-code.md` — Claude Code 环境适配
+- `factory-droid.md` — Factory Droid 环境适配
+- `generic.md` — 通用环境适配模板
 
 ## 不做什么
 
@@ -92,5 +87,4 @@ ln -s ~/.claude/skills ~/.factory/skills
 
 ## 参考
 
-- `references/sync-patterns.md` — 常见的单源维护架构模式
-- `references/healing-algo.md` — 自愈算法的详细实现逻辑
+- `references/adapters/` — 各工具适配案例

@@ -15,7 +15,7 @@
 | [adversarial-successor-audit-kelen](./adversarial-successor-audit-kelen/) | 以「有洁癖的新人接替者」视角做全流程对抗性审计 | v0.2.0 | 可用 |
 | [dialectical-self-review-kelen](./dialectical-self-review-kelen/) | 在行动前对自己的方案做结构化自我反驳 | v0.2.0 | 可用 |
 | [skill-self-evolution-kelen](./skill-self-evolution-kelen/) | 从对话中实时识别方法论并转化为可部署的 skill 包 | v0.2.0 | 可用 |
-| [env-sync-maintainer-kelen](./env-sync-maintainer-kelen/) | 维护多 AI 工具环境的配置同步与 Skill 自愈 | v0.1.0 | 可用 |
+| [env-sync-maintainer-kelen](./env-sync-maintainer-kelen/) | 通用环境适配与 Skill 自愈方法论 | v0.2.0 | 可用 |
 
 ### 技能关系
 
@@ -147,9 +147,12 @@ Agent_Skills_kelen/
 │   ├── SKILL.md
 │   ├── agents/interface.yaml
 │   └── references/                        #   进化判据、工作空间规范、案例
-└── env-sync-maintainer-kelen/             # Skill: 环境同步维护
+└── env-sync-maintainer-kelen/             # Skill: 通用环境适配与自愈
     ├── SKILL.md
-    └── references/                        #   同步模式、自愈算法
+    └── references/
+        └── adapters/                      #   各工具适配案例
+            ├── claude-code.md
+            └── factory-droid.md
 ```
 
 ## 部署约定

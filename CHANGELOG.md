@@ -2,6 +2,20 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.1] - 2026-04-23
+
+### 修正 (Fixed)
+
+- skill-routing.md 上下文路由通用化，移除特定环境路径硬编码，增加「新环境自适应触发」(Generalize contextual routing, add new-environment trigger)
+- env-sync-maintainer-kelen 重构为通用方法论，不绑定具体工具，适配案例拆到 references/adapters/ (Refactor as universal methodology with adapter case studies)
+- skill-self-evolution-kelen 步骤③改为三层决策（粗粒度→细化→确认），必须等用户回复，不可自行跳过 (Three-layer decision: coarse → refine → confirm, must wait for user)
+- 新增 `references/skill-design-principles.md` 通用设计原则（格式规范、内容净化、触发词覆盖、明确判断不干扰原则），入库 (Add universal design principles, committed to repo)
+
+### 新增 (Added)
+
+- env-sync-maintainer-kelen/references/adapters/claude-code.md — Claude Code 适配案例 (Add Claude Code adapter)
+- env-sync-maintainer-kelen/references/adapters/factory-droid.md — Factory Droid 适配案例 (Add Factory Droid adapter)
+
 ## [0.5.0] - 2026-04-23
 
 ### 新增 (Added)
