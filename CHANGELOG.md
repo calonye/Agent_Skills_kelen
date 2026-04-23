@@ -2,6 +2,20 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.2] - 2026-04-23
+
+### 修正 (Fixed)
+
+- CLAUDE.md 增加上下文路由(Contextual Routing)规则 #7：状态感知、决策风险、交付验收、新环境自适应四种触发类型 (Add contextual routing rule #7 to CLAUDE.md)
+- AGENTS.md 从外部文件引用改为内联路由规则（从 CLAUDE.md 同步），解决 Factory 侧触发层断裂问题 (Inline routing rules in AGENTS.md, synced from CLAUDE.md, fix trigger layer breakage)
+- skill-design-principles.md 补充两层路由机制说明：发现层(description) + 触发层(CLAUDE.md/AGENTS.md)缺一不可 (Add two-layer routing explanation: discovery layer + trigger layer)
+- skill-self-evolution-kelen 步骤④ 增加名称一致性检查：路由规则、目录名、name 字段三者必须一致 (Add name consistency check in deployment verification)
+- skill-self-evolution-kelen 步骤③ 决策格式优化：每选项附带快速决策信息，「待观察」替代 brain 笔记 (Optimize decision format with fast-decision info, replace brain with watchlist)
+
+### 新增 (Added)
+
+- factory_sync_daemon.py 增加 AGENTS.md 规则自动同步：从 CLAUDE.md 提取路由规则 → AGENTS.md（带路径适配 + checksum 去重）(Add AGENTS.md rule auto-sync to factory_sync_daemon.py)
+
 ## [0.5.1] - 2026-04-23
 
 ### 修正 (Fixed)
