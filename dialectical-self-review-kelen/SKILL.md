@@ -32,8 +32,8 @@ metadata:
 在行动之前，先成为自己的反方。
 
 **核心区别：**
-- `adversarial-review`：审查别人的代码 → 外向·代码
-- `adversarial-successor-audit`：审查系统对新人的可用性 → 外向·系统
+- `adversarial-review`（内置 skill）：审查别人的代码 → 外向·代码
+- `adversarial-successor-audit-kelen`：审查系统对新人的可用性 → 外向·系统
 - `brainstorming`：发散探索设计方案 → 发散·创造
 - **本 skill**：对自己已有的方案做结构化反驳 → **内向·收敛**
 
@@ -124,13 +124,13 @@ metadata:
 ## 不做什么
 
 - 不审查代码语法或逻辑（那是 code review）
-- 不审查系统对新人的可用性（那是 adversarial-successor-audit）
-- 不发散探索新方案（那是 brainstorming）
-- 不把方法论固化为 skill（那是 skill-self-evolution，但本 skill 可触发它）
+- 不审查系统对新人的可用性（那是 `adversarial-successor-audit-kelen`）
+- 不发散探索新方案（那是 `brainstorming`，内置 skill）
+- 不把方法论固化为 skill（那是 `skill-self-evolution-kelen`，但本 skill 可触发它）
 - 不做无目的的哲学讨论 — 每个论点必须有明确的「成立/推翻/修正」结论
 
 ## 参考
 
 - `references/dialectic-protocol.md` — 五步协议详解与注意事项
 - `references/first-principles.md` — 第一性原理判据链
-- `references/examples.md` — 本次对话中的三轮实际案例
+- `references/examples.md` — 辩证审查的通用场景案例

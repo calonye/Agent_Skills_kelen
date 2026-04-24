@@ -123,4 +123,4 @@ Skill 设计和部署后必须验证，否则等于没做：
 
 - 在核心流程中标注「交叉引用」：当某个步骤可以或应该触发另一个 skill 时，明确写出来
 - 在「不做什么」段落中标注功能边界：明确本 skill 不做什么、该用哪个 skill
-- 三个核心 skill 形成闭环：`skill-self-evolution`（提炼）→ `dialectical-self-review`（思辨验证）→ `adversarial-successor-audit`（交付审计）
+- 三个核心 skill 形成闭环：`skill-self-evolution-kelen`（提炼）→ `dialectical-self-review-kelen`（思辨验证）→ `adversarial-successor-audit-kelen`（交付审计）

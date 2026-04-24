@@ -211,4 +211,4 @@ metadata:
 - `references/evolution-criteria.md` — 4 层验证详解 + 边界案例
 - `references/workspace-conventions.md` — 工作空间目录规范
 - `references/skill-design-principles.md` — Skill 设计原则（格式规范、内容净化、触发词覆盖）— 转化新 skill 时必须读取
-- `references/examples.md` — 本次对话的自我进化实例
+- `references/examples.md` — 自我进化的通用场景案例

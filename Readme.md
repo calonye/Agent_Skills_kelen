@@ -41,7 +41,7 @@ git clone https://github.com/calonye/Agent_Skills_kelen.git
 cd Agent_Skills_kelen
 
 # 部署单个 skill 到 Claude Code
-bash adversarial-successor-audit/update.sh
+bash adversarial-successor-audit-kelen/update.sh
 
 # 部署所有 skill（需要 ~/.claude/skills/update-all.sh）
 ~/.claude/skills/update-all.sh

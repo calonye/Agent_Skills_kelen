@@ -82,7 +82,7 @@ metadata:
 ## 不做什么
 
 - 不负责 Skill 内容的编写（那是 skill-creator）
-- 不负责 Skill 的逻辑审查（那是 adversarial-successor-audit）
+- 不负责 Skill 的逻辑审查（那是 `adversarial-successor-audit-kelen`）
 - 不修改非环境同步相关的配置文件
 
 ## 参考
