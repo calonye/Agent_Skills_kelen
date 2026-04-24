@@ -103,7 +103,7 @@ metadata:
 - 影响范围：<涉及哪些现有 skill / 新增什么能力>
 
 [1] 独立转化 → 创建新 skill `<name>-kelen`，预计产出 SKILL.md + references/ + interface.yaml
-[2] 合入现有 → <推荐合入哪个 skill + 一句话理由，如「与 env-sync-maintainer 职责重叠 70%」>
+[2] 合入现有 → <推荐合入哪个 skill + 一句话理由，如「与 env-sync-maintainer-kelen 职责重叠 70%」>
 [3] 跳过 → <跳过原因，如「复用频率预估 < 3 次」>
 [4] <AI 思辨建议 → 针对此方法论的具体建议，如「建议拆分为 2 个子 skill」或「建议先做 POC 验证」>
 [N] 补充说明（请描述你的想法）
