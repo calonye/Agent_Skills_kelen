@@ -2,6 +2,27 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.3] - 2026-04-24
+
+### 修正 (Fixed)
+
+- SKILL.md 参考描述清除具体项目名和对话编号（examples.md 泛化）(Generalize examples.md references)
+- 所有 SKILL.md 正文中 skill 名加 -kelen 后缀（消除旧名残留）(Add -kelen suffix to all skill name references)
+- dialectical-self-review 交叉引用从「强制触发」改为「相关技能」（独立可用，不耦合）(Change cross-references from forced triggers to related skills)
+- adversarial-successor-audit 增加相关技能段落 (Add related skills section)
+- skill-self-evolution 增加相关技能段落 (Add related skills section)
+- Readme.md 技能关系图加 -kelen 后缀 + env-sync-maintainer 触发词 (Add -kelen suffix to skill names in Readme)
+- Readme.md/install.sh 触发词验证加 -kelen 后缀 (Add -kelen suffix to trigger test words)
+- interface.yaml name 字段与目录名一致（3 个 skill）(Fix interface.yaml name fields to match directory names)
+- workspace-conventions.md 个人路径改为模板变量 + 目录结构更新 (Replace personal paths with template variables)
+- skill-design-principles.md 增加验证原则和交叉引用规范 (Add verification principles and cross-reference guidelines)
+- workspace-conventions.md 命名规范改为 -kelen 后缀 (Update naming convention to include -kelen suffix)
+
+### 变更 (Changed)
+
+- 删除冗余的 ~/.factory/rules/ 文件（skill-routing.md、progressive-disclosure.md、agent-team.md），规则内容由 factory_sync_daemon.py 自动从 CLAUDE.md 同步到 AGENTS.md (Remove redundant rule files, sync from CLAUDE.md via daemon)
+- AGENTS.md 路由规则从外部引用改为内联 + Factory 专属模型映射保留 (Inline routing rules in AGENTS.md, keep Factory-specific model mapping)
+
 ## [0.5.2] - 2026-04-23
 
 ### 修正 (Fixed)
