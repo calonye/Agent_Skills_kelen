@@ -23,7 +23,7 @@ schedule: >-
   README 或 AGENTS.md 大幅修改后
 metadata:
   author: kelen
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # 对抗性接替者审计 / Adversarial Successor Audit

@@ -1,0 +1,41 @@
+name: env-sync-maintainer-kelen
+description: >-
+  维护多 AI 工具环境的配置同步与 Skill 自愈。
+  识别当前 AI 工具的 skill 存放位置和格式，从上游源建立同步机制，
+  植入自愈逻辑（注册表校验、磁盘扫描、一致性检查）。
+  触发场景（用户口语）：
+  「同步一下配置」「两边不一样了」「修复一下 skill 列表」
+  「update-all 报错了」「新建的 skill 怎么没有生效」
+  「帮我把这个 skill 同步到另一个工具里」
+  触发场景（AI 自我思考）：
+  「当前环境的 skill 目录与上游不一致」
+  「检测到新的 AI 工具环境，需要建立同步机制」
+  「注册表（update-all 脚本）可能已损坏，需要自愈」
+  关键词：环境同步、配置漂移、skill 注册、update-all 修复、自愈、适配。
+inputs:
+  - name: source_env
+    type: string
+    description: "上游 AI 工具标识（如 claude-code / factory-droid）"
+    required: false
+  - name: target_env
+    type: string
+    description: "目标 AI 工具标识（如 factory-droid / cursor）"
+    required: false
+  - name: mode
+    type: string
+    description: "sync（单向同步）/ heal（自愈修复）/ full（同步+自愈）"
+    default: "full"
+outputs:
+  - name: sync_report
+    type: markdown
+    description: 同步/自愈报告（操作清单 + 结果 + 建议）
+tools_required:
+  - Read
+  - Execute
+  - Grep
+  - Glob
+  - LS
+constraints:
+  - 不修改 skill 内容（只同步文件和注册表）
+  - 不负责 skill 本身的逻辑审查
+  - 自愈操作必须幂等（重复执行结果一致）

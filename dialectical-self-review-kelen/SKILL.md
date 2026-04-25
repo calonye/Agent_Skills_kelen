@@ -24,7 +24,7 @@ schedule: >-
   多个互相矛盾的需求需要取舍时
 metadata:
   author: kelen
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # 辩证自我审查 / Dialectical Self-Review

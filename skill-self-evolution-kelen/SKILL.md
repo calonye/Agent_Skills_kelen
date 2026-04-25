@@ -25,7 +25,7 @@ schedule: >-
   发现自己用了一个之前不具备的推理模式时
 metadata:
   author: kelen
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # 技能自我进化 / Skill Self-Evolution

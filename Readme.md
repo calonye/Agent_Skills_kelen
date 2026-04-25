@@ -153,6 +153,7 @@ Agent_Skills_kelen/
 │   └── references/                        #   进化判据、工作空间规范、设计原则、案例
 └── env-sync-maintainer-kelen/             # Skill: 通用环境适配与自愈
     ├── SKILL.md
+    ├── agents/interface.yaml              #   接口声明
     └── references/
         └── adapters/                      #   各工具适配案例
             ├── claude-code.md
