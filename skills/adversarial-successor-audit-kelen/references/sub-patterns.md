@@ -112,3 +112,84 @@ fi
 echo "" | bash scripts/git/sync.sh --source=fetch-only 2>&1
 # 若退出码为 0 且无阻塞 → 通过
 ```
+
+---
+
+## 子模式 D：提交内容隐私扫描
+
+### 定义
+
+入库文件不应包含个人路径、密钥、本地配置等隐私信息。这是一个常被忽略但影响严重的边界问题——`.gitignore` 只管「哪些文件不入库」，不管「入库文件里有什么内容」。
+
+### 检测方法
+
+```bash
+# 扫描所有入库文件中的个人路径模式
+git ls-files | xargs grep -n '/Users/\|/home/[a-z]' 2>/dev/null
+# 扫描密钥/令牌模式
+git ls-files | xargs grep -n 'api_key\|secret\|token\s*=' 2>/dev/null
+# 扫描硬编码主机名
+git ls-files | xargs grep -n 'localhost:\|127\.0\.0\.1' 2>/dev/null
+```
+
+### 典型错误
+
+- 部署脚本中硬编码 `/Users/你的用户名/...` 路径 → 其他开发者无法直接使用
+- `workspace-conventions.md` 中示例路径用真实用户路径 → 泄漏信息 + 降低可移植性
+- `.env` 文件意外入库 → 泄漏 API 密钥
+
+### 修正模式
+
+将个人信息替换为模板变量：
+- `/Users/你的用户名/projects/` → `<YOUR_REPO_PATH>` 或 `$HOME/projects/`
+- 硬编码路径 → 环境变量（`$HOME`、`$(pwd)`）
+- 密钥 → 环境变量引用（`$API_KEY`）+ `.env.example` 模板
+
+### 验证方法
+
+```bash
+# CI 可集成此检查
+git ls-files | xargs grep -n '/Users/\|/home/[a-z]' 2>/dev/null
+# 预期输出为空，若有输出则报错
+```
+
+---
+
+## 子模式 E：目录树一致性检验
+
+### 定义
+
+Readme.md 中的目录结构树应与 `git ls-files` 的实际内容严格对应。目录树是新人首次浏览项目时看到的地图——如果地图与实际不符，新人会困在错误的预期中。
+
+### 检测方法
+
+```
+1. 从 Readme.md 的目录结构树中提取所有目录和文件名
+2. 对每个条目，验证它在 git tracked 文件中确实存在
+3. 反向检查：是否有 git tracked 的关键文件在目录树中遗漏
+4. 特别注意：目录树不应包含 git-ignored 的文件/目录（如 Docs/、update.sh）
+```
+
+### 典型错误
+
+- 目录树列出了 `Docs/` 但实际 git clone 后看不到（git-ignored）→ 新人困惑
+- 目录树缺少新建的 skill 目录 → 新人不知道它存在
+- 目录树列出了 `update.sh` 但它不入库 → 新人 clone 后找不到
+
+### 修正模式
+
+- 目录树只展示 `git ls-files` 能看到的文件和目录
+- git-ignored 的内容用注释或引文提示，不画进树形图
+- 每次 skill 新增/删除/重命名后，必须更新目录树
+
+### 验证方法
+
+```bash
+# 提取目录树中列出的目录名
+grep -oP '[\w-]+(?=/|$)' Readme.md | sort > /tmp/tree_dirs.txt
+# 提取 git tracked 的顶层目录
+git ls-files | cut -d/ -f1 | sort -u > /tmp/git_dirs.txt
+# 差异检查
+diff /tmp/tree_dirs.txt /tmp/git_dirs.txt
+# 预期：无差异（目录树与实际一致）
+```

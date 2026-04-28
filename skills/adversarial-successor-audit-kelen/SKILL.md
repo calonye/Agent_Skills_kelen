@@ -65,9 +65,9 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 - 出错时有提示吗？（报错信息是否有用）
 - 我会不会走歪？（有没有护栏防误操作）
 
-### 3. 三个子模式检测
+### 3. 子模式检测
 
-对每个发现的问题，用三个子模式深入诊断：
+对每个发现的问题，用子模式深入诊断：
 
 **子模式 A — Bootstrap 死循环检测**
 > 生成物是否依赖生成器，而生成器本身也未入库？
@@ -82,6 +82,12 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 **子模式 C — AI 可调用性检验**
 > 每个交互式脚本能否在无 stdin 环境下使用？
 > 判据：是否支持 `--yes` / `--type=` 等非交互参数？
+
+**子模式 D — 提交内容隐私扫描**
+> 入库文件中是否包含个人路径、密钥、硬编码主机名等隐私信息？
+
+**子模式 E — 目录树一致性检验**
+> Readme.md 目录结构树是否与 `git ls-files` 实际内容严格对应？
 
 详见 `references/sub-patterns.md`。
 
@@ -124,5 +130,5 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 ## 参考
 
 - `references/audit-checklist.md` — 逐步审计清单
-- `references/sub-patterns.md` — 三个子模式详解
+- `references/sub-patterns.md` — 五个子模式详解
 - `references/examples.md` — 迭代审计的通用场景案例

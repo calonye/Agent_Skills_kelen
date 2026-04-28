@@ -4,6 +4,11 @@
 
 ## [0.6.0] - 2026-04-28
 
+### 新增 (Added)
+
+- adversarial-successor-audit-kelen 新增子模式 D（提交内容隐私扫描）和 E（目录树一致性检验）(Add sub-patterns D and E: privacy scan and directory tree consistency)
+- adversarial-successor-audit-kelen 审计清单新增「提交内容隐私」和「目录树一致性」检查项 (Add privacy scan and directory tree consistency check items)
+
 ### 变更 (Changed)
 
 - 目录重组：4 个 skill 目录移入 `skills/` 子目录，项目产物与仓库元信息分层 (Restructure: move skills into `skills/` subdirectory)
