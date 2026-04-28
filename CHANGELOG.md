@@ -13,10 +13,17 @@
   - dialectical-self-review → dialectical-self-review-kelen
   - skill-self-evolution → skill-self-evolution-kelen
 - env-sync-maintainer-kelen 补充本地 update.sh 脚本 (Add local update.sh for env-sync-maintainer-kelen)
+- install.sh 默认路径逻辑修正：优先环境变量 → 检测仓库目录 → 回退克隆路径 (Fix install.sh default path logic: env var → detect repo → fallback clone)
+- workspace-conventions.md REPO_PATH 模板从硬编码路径改为通用模板变量 (Change workspace-conventions REPO_PATH from hardcoded path to template variable)
+- Readme.md 目录结构补充 generic.md + 修正路径示例 (Add generic.md to Readme directory structure + fix path examples)
 
 ### 新增 (Added)
 
 - env-sync-maintainer-kelen/references/adapters/generic.md — 通用环境适配模板，填补 SKILL.md 中引用但缺失的文件 (Add generic adapter template for env-sync-maintainer-kelen)
+
+### 变更 (Changed)
+
+- 删除旧克隆 ~/Agent_Skills_kelen/（v0.4.0 残留，skill 无 -kelen 后缀，与主工作空间不同步）(Remove stale clone at ~/Agent_Skills_kelen/)
 
 ## [0.5.3] - 2026-04-24
 

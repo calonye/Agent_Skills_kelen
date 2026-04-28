@@ -4,7 +4,18 @@ set -euo pipefail
 REPO_URL="https://github.com/calonye/Agent_Skills_kelen.git"
 REPO_NAME="Agent_Skills_kelen"
 SKILL_DIR="${SKILL_DIR:-$HOME/.claude/skills}"
-INSTALL_DIR="${INSTALL_DIR:-$HOME/$REPO_NAME}"
+
+# 优先使用环境变量；其次检测是否在仓库内执行；最后回退到默认克隆路径
+if [ -n "${INSTALL_DIR+x}" ]; then
+  # 用户显式设置了 INSTALL_DIR
+  :
+elif [ -f "$(pwd)/install.sh" ] && [ -d "$(pwd)/.git" ]; then
+  # 在仓库根目录执行
+  INSTALL_DIR="$(pwd)"
+else
+  # 回退到默认克隆路径
+  INSTALL_DIR="$HOME/$REPO_NAME"
+fi
 
 echo "=== Agent_Skills_kelen 一键安装 ==="
 echo "Skill 目标目录: $SKILL_DIR"

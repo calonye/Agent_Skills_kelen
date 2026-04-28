@@ -71,7 +71,7 @@ Skill 部署到 `~/.claude/skills/` 后，AI 工具会根据 `SKILL.md` 的 `des
 **Claude Code 环境：**
 
 > 请帮我安装 Agent_Skills_kelen 思维技能包：
-> 1. 将仓库 https://github.com/calonye/Agent_Skills_kelen.git 克隆到 ~/Agent_Skills_kelen
+> 1. 将仓库 https://github.com/calonye/Agent_Skills_kelen.git 克隆到本地
 > 2. 将所有含 SKILL.md 的子目录同步到 ~/.claude/skills/（排除 update.sh）
 > 3. 为每个 skill 生成 update.sh 同步脚本
 > 4. 验证部署结果：列出 ~/.claude/skills/ 下已安装的 skill
@@ -157,7 +157,8 @@ Agent_Skills_kelen/
     └── references/
         └── adapters/                      #   各工具适配案例
             ├── claude-code.md
-            └── factory-droid.md
+            ├── factory-droid.md
+            └── generic.md
 ```
 
 ## 部署约定
@@ -170,7 +171,7 @@ Agent_Skills_kelen/
 
 ```bash
 #!/bin/bash
-REPO_PATH="<YOUR_REPO_PATH>"          # 例如: $HOME/Agent_Skills_kelen
+REPO_PATH="<YOUR_REPO_PATH>"          # 例如: /Users/you/projects/Agent_Skills_kelen
 SKILL_NAME="adversarial-successor-audit-kelen"  # 替换为对应 skill 名
 DST="$HOME/.claude/skills/$SKILL_NAME"
 
