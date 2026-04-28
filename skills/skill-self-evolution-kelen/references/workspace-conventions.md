@@ -6,27 +6,29 @@
 ## 归属性质分类（仓库即根场景）
 
 本仓库以 Git 仓库根目录作为工作空间，文件按归属性质分为两类：
-- **提交类（git tracked）**：仓库元信息 + 项目产物，随仓库流通
-- **本地类（git ignored）**：Steering 文档、部署脚本、系统文件，仅供本地使用
+- **提交类（git tracked）**：仓库元信息 + 项目产物（skills/），随仓库流通
+- **本地类（git ignored）**：Project/ 下的研发工作空间文件、部署脚本、系统文件，仅供本地使用
 - 分界线是 `.gitignore`，注释中标注每条规则的归属类别
 
 ## 工作空间结构
 
 ```
-Agent_Skills_kelen/                  # 工作空间根目录
-├── Readme.md                        # 工作空间说明 + 版本记录
+Agent_Skills_kelen/                  # 仓库根目录
+├── Readme.md                        # 仓库说明
 ├── CHANGELOG.md                     # 变更日志
 ├── LICENSE                          # MIT 协议
 ├── install.sh                       # 一键安装脚本（入库）
 ├── .gitignore                       # Git 忽略规则
-├── Docs/                            # 开发指导规范（gitignore，不入库）
-├── <skill-name>-kelen/             # 每个 skill 一个目录（含水印后缀）
-│   ├── SKILL.md                     # 主文件（路由 + 流程骨架）
-│   ├── agents/
-│   │   └── interface.yaml           # 接口声明
-│   ├── references/                  # 详解、判据、案例
-│   └── update.sh                    # 同步脚本（gitignore，本地生成）
-└── ...
+├── skills/                          # 项目研发层：所有 skill 产物
+│   └── <skill-name>-kelen/          # 每个 skill 一个目录
+│       ├── SKILL.md                 # 路由 + 流程骨架
+│       ├── agents/interface.yaml    # 接口声明
+│       ├── references/              # 详解、判据、案例
+│       └── update.sh                # 同步脚本（gitignore，本地生成）
+└── Project/                         # 本地研发工作空间（gitignore，不入库）
+    ├── Readme.md                    # 研发工作空间说明
+    └── Docs/Steering/               # Steering 文档
+        └── 开发指导规范.md
 ```
 
 ## 命名规范
@@ -42,7 +44,7 @@ Agent_Skills_kelen/                  # 工作空间根目录
 
 ```bash
 #!/bin/bash
-REPO_PATH="<YOUR_REPO_PATH>"          # 本地仓库绝对路径
+REPO_PATH="<YOUR_REPO_PATH>/skills"    # 例如: Agent_Skills_kelen 仓库下的 skills/ 目录
 SKILL_NAME="<skill-name>-kelen"       # 例如: adversarial-successor-audit-kelen
 DST="$HOME/.claude/skills/$SKILL_NAME"
 

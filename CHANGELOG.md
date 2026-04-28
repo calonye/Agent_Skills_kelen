@@ -2,6 +2,20 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.6.0] - 2026-04-28
+
+### 变更 (Changed)
+
+- 目录重组：4 个 skill 目录移入 `skills/` 子目录，项目产物与仓库元信息分层 (Restructure: move skills into `skills/` subdirectory)
+- 新增 `Project/` 本地研发工作空间（gitignore），含 `Docs/Steering/开发指导规范.md` (Add `Project/` local workspace with `Docs/Steering/`)
+- `.gitignore` 从排除 `Docs/` 改为排除 `Project/` 整个目录（本地类统一归入研发工作空间）(Change .gitignore from `Docs/` to `Project/`)
+- `install.sh` 扫描路径从 `$INSTALL_DIR/*/` 改为 `$INSTALL_DIR/skills/*/` (Update install.sh scan path to `skills/` subdirectory)
+- Readme.md 技能清单链接加 `skills/` 前缀 (Update Readme.md skill links with `skills/` prefix)
+- Readme.md 目录结构更新为 `skills/` + `Project/` 两层 (Update Readme.md directory structure)
+- workspace-conventions.md 目录结构图和 REPO_PATH 更新 (Update workspace-conventions structure and REPO_PATH)
+- 开发指导规范.md 更新 skill 开发流程路径和 REPO_PATH (Update steering doc skill path and REPO_PATH)
+- Project/Readme.md 新增本地研发工作空间说明 (Add Project/Readme.md for local workspace)
+
 ## [0.5.4] - 2026-04-28
 
 ### 修正 (Fixed)

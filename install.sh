@@ -34,7 +34,7 @@ fi
 # 2. Deploy all skills
 echo "[2/3] 部署 skills..."
 deployed=0
-for skill_dir in "$INSTALL_DIR"/*/; do
+for skill_dir in "$INSTALL_DIR/skills"/*/; do
   [ -f "$skill_dir/SKILL.md" ] || continue
   skill_name=$(basename "$skill_dir")
 
@@ -45,7 +45,7 @@ for skill_dir in "$INSTALL_DIR"/*/; do
   # Generate update.sh for future syncs
   cat > "$skill_dir/update.sh" <<EOF
 #!/bin/bash
-REPO_PATH="$INSTALL_DIR"
+REPO_PATH="$INSTALL_DIR/skills"
 SKILL_NAME="$skill_name"
 DST="$SKILL_DIR/\$SKILL_NAME"
 [ ! -d "\$REPO_PATH/\$SKILL_NAME" ] && echo "源目录不存在" && exit 1

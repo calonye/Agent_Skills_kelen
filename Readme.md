@@ -6,10 +6,10 @@
 
 | 技能 | 描述 | 版本 |
 |------|------|------|
-| [adversarial-successor-audit-kelen](./adversarial-successor-audit-kelen/) | 以「有洁癖的新人接替者」视角做全流程对抗性审计 | v0.2.0 |
-| [dialectical-self-review-kelen](./dialectical-self-review-kelen/) | 在行动前对自己的方案做结构化自我反驳 | v0.2.0 |
-| [skill-self-evolution-kelen](./skill-self-evolution-kelen/) | 从对话中实时识别方法论并转化为可部署的 skill 包 | v0.2.0 |
-| [env-sync-maintainer-kelen](./env-sync-maintainer-kelen/) | 通用环境适配与 Skill 自愈 | v0.2.0 |
+| [adversarial-successor-audit-kelen](./skills/adversarial-successor-audit-kelen/) | 以「有洁癖的新人接替者」视角做全流程对抗性审计 | v0.2.0 |
+| [dialectical-self-review-kelen](./skills/dialectical-self-review-kelen/) | 在行动前对自己的方案做结构化自我反驳 | v0.2.0 |
+| [skill-self-evolution-kelen](./skills/skill-self-evolution-kelen/) | 从对话中实时识别方法论并转化为可部署的 skill 包 | v0.2.0 |
+| [env-sync-maintainer-kelen](./skills/env-sync-maintainer-kelen/) | 通用环境适配与 Skill 自愈 | v0.2.0 |
 
 ### 技能关系
 
@@ -33,9 +33,6 @@ cd Agent_Skills_kelen
 
 # 一键部署所有 skill
 bash install.sh
-
-# 或部署单个 skill（需先创建 update.sh）
-bash adversarial-successor-audit-kelen/update.sh
 ```
 
 ### 触发词
@@ -66,17 +63,16 @@ Agent_Skills_kelen/
 ├── LICENSE
 ├── install.sh
 │
-├── adversarial-successor-audit-kelen/
-├── dialectical-self-review-kelen/
-├── skill-self-evolution-kelen/
-└── env-sync-maintainer-kelen/
-    └── 每个 skill 内含：
-        SKILL.md                 # 路由 + 流程骨架
-        agents/interface.yaml    # 接口声明
-        references/              # 详解、判据、案例
+└── skills/                                ← 项目研发层
+    ├── adversarial-successor-audit-kelen/
+    ├── dialectical-self-review-kelen/
+    ├── env-sync-maintainer-kelen/
+    └── skill-self-evolution-kelen/
 ```
 
-> `Docs/`（开发指导规范）和 `*/update.sh`（本地部署脚本）不入库，详见 `.gitignore`。
+每个 skill 内含：`SKILL.md`（路由 + 流程骨架）+ `agents/interface.yaml`（接口声明）+ `references/`（详解、判据、案例）
+
+> `Project/`（本地研发工作空间）和 `*/update.sh`（本地部署脚本）不入库，详见 `.gitignore`。
 
 ## 技术规范
 
