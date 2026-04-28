@@ -60,11 +60,11 @@ bash adversarial-successor-audit-kelen/update.sh
 
 ```
 Agent_Skills_kelen/
-├── .gitignore                    # 提交类 / 本地类的分界线
+├── .gitignore
 ├── Readme.md
 ├── CHANGELOG.md
 ├── LICENSE
-├── install.sh                    # 一键安装脚本
+├── install.sh
 │
 ├── adversarial-successor-audit-kelen/
 ├── dialectical-self-review-kelen/
@@ -74,16 +74,9 @@ Agent_Skills_kelen/
         SKILL.md                 # 路由 + 流程骨架
         agents/interface.yaml    # 接口声明
         references/              # 详解、判据、案例
-
-── 不入库（.gitignore）─────────────────────────────
-Docs/Steering/                   # 开发指导规范
-*/update.sh                      # 本地部署脚本（含本机路径）
 ```
 
-## 部署约定
-
-- 本地 `update.sh` 脚本将 skill 同步到 AI 工具目录，含本机路径故不入库
-- 克隆后运行一键初始化脚本可自动生成所有 `update.sh`
+> `Docs/`（开发指导规范）和 `*/update.sh`（本地部署脚本）不入库，详见 `.gitignore`。
 
 ## 技术规范
 
