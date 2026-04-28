@@ -13,6 +13,10 @@ description: >-
   「检测到新的 AI 工具环境，需要建立同步机制」
   「注册表（update-all 脚本）可能已损坏，需要自愈」
   关键词：环境同步、配置漂移、skill 注册、update-all 修复、自愈、适配。
+schedule: >-
+  新增或删除 Skill 后注册表未更新时、update-all 脚本报错时、
+  配置多 AI 工具后行为不一致时、检测到新 AI 工具环境时、
+  Skill 目录与上游不同步时
 metadata:
   author: kelen
   version: 0.2.0

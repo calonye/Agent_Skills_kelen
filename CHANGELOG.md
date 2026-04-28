@@ -2,6 +2,22 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.4] - 2026-04-28
+
+### 修正 (Fixed)
+
+- env-sync-maintainer-kelen SKILL.md 补充缺失的 schedule 字段，与其他 skill 风格一致 (Add missing schedule field to env-sync-maintainer-kelen SKILL.md)
+- skill-self-evolution-kelen schedule 字段精简，移除与 description 重复的触发场景描述 (Simplify schedule field, remove redundant trigger descriptions)
+- 3 个 skill 的 update.sh 中 SKILL_NAME 缺少 -kelen 后缀，导致同步目标目录名不一致 (Fix SKILL_NAME missing -kelen suffix in update.sh)
+  - adversarial-successor-audit → adversarial-successor-audit-kelen
+  - dialectical-self-review → dialectical-self-review-kelen
+  - skill-self-evolution → skill-self-evolution-kelen
+- env-sync-maintainer-kelen 补充本地 update.sh 脚本 (Add local update.sh for env-sync-maintainer-kelen)
+
+### 新增 (Added)
+
+- env-sync-maintainer-kelen/references/adapters/generic.md — 通用环境适配模板，填补 SKILL.md 中引用但缺失的文件 (Add generic adapter template for env-sync-maintainer-kelen)
+
 ## [0.5.3] - 2026-04-24
 
 ### 修正 (Fixed)
