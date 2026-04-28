@@ -50,7 +50,7 @@
 
 - 把 AGENTS.md（项目规范，层 1）放入 .gitignore → 新 AI 工具无法读到规则
 - 把 scripts/（自动化工具，层 2）放入 .gitignore → clone 后命令全部 broken
-- 把含有 `/Users/kelen/...` 绝对路径的文件入库 → 泄漏个人信息
+- 把含有 `~/...` 或 `<HOME>/...` 绝对路径的文件入库 → 泄漏个人信息
 
 ### 验证方法
 

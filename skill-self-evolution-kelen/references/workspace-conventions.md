@@ -42,7 +42,7 @@ Agent_Skills_kelen/                  # 工作空间根目录
 
 ```bash
 #!/bin/bash
-REPO_PATH="<YOUR_REPO_PATH>"          # 例如: /Users/kelen/Software/github-star/Agent_Skills_kelen
+REPO_PATH="<YOUR_REPO_PATH>"          # 本地仓库绝对路径
 SKILL_NAME="<skill-name>-kelen"       # 例如: adversarial-successor-audit-kelen
 DST="$HOME/.claude/skills/$SKILL_NAME"
 

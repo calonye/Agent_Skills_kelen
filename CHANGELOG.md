@@ -16,6 +16,9 @@
 - .gitignore 注释规范化，按本地类/系统生成文件分组 (Normalize .gitignore comments by attribution category)
 - workspace-conventions.md 新增「归属性质分类」段落 (Add attribution classification section to workspace-conventions)
 - DocumentManagementStandard 新增「仓库即根场景分类规则」(Add repo-as-root classification rule to DocumentManagementStandard)
+- workspace-conventions.md REPO_PATH 示例移除个人路径，改为纯模板变量 (Remove personal path from workspace-conventions REPO_PATH example)
+- sub-patterns.md 典型错误中的个人路径改为通用路径 (Replace personal path with generic path in sub-patterns examples)
+- 开发指导规范.md REPO_PATH 实例改为通用模板变量 (Replace REPO_PATH instance with generic template in steering doc)
 - 3 个 skill 的 update.sh 中 SKILL_NAME 缺少 -kelen 后缀，导致同步目标目录名不一致 (Fix SKILL_NAME missing -kelen suffix in update.sh)
   - adversarial-successor-audit → adversarial-successor-audit-kelen
   - dialectical-self-review → dialectical-self-review-kelen
