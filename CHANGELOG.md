@@ -11,7 +11,11 @@
 - skill-self-evolution-kelen SKILL.md 4 层判断标准从表格改为编号列表，符合紧凑原则 (Convert table to numbered list per compactness principle)
 - workspace-conventions.md 补充最后更新日期 (Add last-updated date to workspace-conventions.md)
 - 开发指导规范.md 移入 Docs/Steering/ 子目录，符合 DocumentManagementStandard 规范 (Move steering doc to Docs/Steering/ per DocumentManagementStandard)
-- 开发指导规范.md 版本号更新至 v0.3.1 (Bump steering doc version to v0.3.1)
+- 开发指导规范.md 版本号更新至 v0.4.0，新增「文件归属性质分类」章节 (Bump steering doc to v0.4.0, add file attribution classification)
+- Readme.md 目录结构改为提交类/本地类分层标注 (Restructure Readme.md directory tree with tracked/ignored classification)
+- .gitignore 注释规范化，按本地类/系统生成文件分组 (Normalize .gitignore comments by attribution category)
+- workspace-conventions.md 新增「归属性质分类」段落 (Add attribution classification section to workspace-conventions)
+- DocumentManagementStandard 新增「仓库即根场景分类规则」(Add repo-as-root classification rule to DocumentManagementStandard)
 - 3 个 skill 的 update.sh 中 SKILL_NAME 缺少 -kelen 后缀，导致同步目标目录名不一致 (Fix SKILL_NAME missing -kelen suffix in update.sh)
   - adversarial-successor-audit → adversarial-successor-audit-kelen
   - dialectical-self-review → dialectical-self-review-kelen

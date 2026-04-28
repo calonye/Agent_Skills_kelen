@@ -133,12 +133,15 @@ INSTALL_DIR=~/projects/Agent_Skills_kelen curl -fsSL https://raw.githubuserconte
 
 ```
 Agent_Skills_kelen/
-├── Readme.md                              # 本文件
+│
+├── [提交类] 仓库元信息与产物（git tracked）
+│
+├── .gitignore                             # 两类归属的分界线
+├── Readme.md                              # 仓库说明 + 目录结构
+├── CHANGELOG.md                           # 仓库变更日志
 ├── LICENSE                                # MIT 协议
-├── CHANGELOG.md                           # 变更日志
-├── install.sh                             # 一键安装脚本（入库）
-├── .gitignore
-├── Docs/Steering/                        # 开发指导规范（Steering 文档，gitignore，不入库）
+├── install.sh                             # 一键安装脚本
+│
 ├── adversarial-successor-audit-kelen/     # Skill: 对抗性接替者审计
 │   ├── SKILL.md                           #   路由 + 流程骨架
 │   ├── agents/interface.yaml              #   接口声明
@@ -159,6 +162,13 @@ Agent_Skills_kelen/
             ├── claude-code.md
             ├── factory-droid.md
             └── generic.md
+
+│
+├── [本地类] 仅供本地开发（git ignored）
+│
+├── Docs/Steering/                         # Steering 文档（开发指导规范等）
+│   └── 开发指导规范.md
+└── */update.sh                            # 各 skill 的本地部署脚本（含本机路径）
 ```
 
 ## 部署约定
