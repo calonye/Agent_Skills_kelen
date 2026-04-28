@@ -9,6 +9,9 @@
 - env-sync-maintainer-kelen SKILL.md 补充缺失的 schedule 字段，与其他 skill 风格一致 (Add missing schedule field to env-sync-maintainer-kelen SKILL.md)
 - skill-self-evolution-kelen schedule 字段精简，移除与 description 重复的触发场景描述 (Simplify schedule field, remove redundant trigger descriptions)
 - skill-self-evolution-kelen SKILL.md 4 层判断标准从表格改为编号列表，符合紧凑原则 (Convert table to numbered list per compactness principle)
+- workspace-conventions.md 补充最后更新日期 (Add last-updated date to workspace-conventions.md)
+- 开发指导规范.md 移入 Docs/Steering/ 子目录，符合 DocumentManagementStandard 规范 (Move steering doc to Docs/Steering/ per DocumentManagementStandard)
+- 开发指导规范.md 版本号更新至 v0.3.1 (Bump steering doc version to v0.3.1)
 - 3 个 skill 的 update.sh 中 SKILL_NAME 缺少 -kelen 后缀，导致同步目标目录名不一致 (Fix SKILL_NAME missing -kelen suffix in update.sh)
   - adversarial-successor-audit → adversarial-successor-audit-kelen
   - dialectical-self-review → dialectical-self-review-kelen

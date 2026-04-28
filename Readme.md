@@ -138,7 +138,7 @@ Agent_Skills_kelen/
 ├── CHANGELOG.md                           # 变更日志
 ├── install.sh                             # 一键安装脚本（入库）
 ├── .gitignore
-├── Docs/                                  # 开发指导规范（gitignore，不入库）
+├── Docs/Steering/                        # 开发指导规范（Steering 文档，gitignore，不入库）
 ├── adversarial-successor-audit-kelen/     # Skill: 对抗性接替者审计
 │   ├── SKILL.md                           #   路由 + 流程骨架
 │   ├── agents/interface.yaml              #   接口声明

@@ -1,6 +1,7 @@
 # 工作空间目录规范 / Workspace Conventions
 
 > 基于 DocumentManagementStandard 的 skill 工作空间约定。
+> 最后更新: 2026-04-28
 
 ## 工作空间结构
 
