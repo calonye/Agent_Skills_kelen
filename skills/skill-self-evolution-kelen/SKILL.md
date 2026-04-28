@@ -124,7 +124,7 @@ metadata:
 
 #### 路径 1：创建新 skill
 
-1. 在工作空间创建目录：`Agent_Skills_kelen/<skill-name>-kelen/`
+1. 在工作空间创建目录：`Agent_Skills_kelen/skills/<skill-name>-kelen/`
 2. 按以下结构组织：
    - `SKILL.md`：路由 + 流程骨架
      - frontmatter 必含 `name`、`description`（触发场景）、`metadata`（author/version）
