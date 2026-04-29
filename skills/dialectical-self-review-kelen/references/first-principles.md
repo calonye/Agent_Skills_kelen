@@ -1,3 +1,8 @@
+---
+description: 第一性原理判据链
+parentRule: SKILL.md
+---
+
 # 第一性原理判据链 / First Principles Decision Chain
 
 ## 定义

@@ -1,3 +1,8 @@
+---
+description: 五步辩证协议详解与注意事项
+parentRule: SKILL.md
+---
+
 # 辩证协议详解 / Dialectic Protocol
 
 ## 五步协议

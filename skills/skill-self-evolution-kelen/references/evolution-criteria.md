@@ -1,3 +1,8 @@
+---
+description: 4层验证详解与边界案例
+parentRule: SKILL.md
+---
+
 # 进化判据详解 / Evolution Criteria
 
 ## 4 层验证的边界案例

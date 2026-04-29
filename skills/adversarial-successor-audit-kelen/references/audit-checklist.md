@@ -1,3 +1,8 @@
+---
+description: 逐步审计清单，模拟新人接手流程的检查项
+parentRule: SKILL.md
+---
+
 # 审计清单 / Audit Checklist
 
 > 逐步模拟新人接手流程，每一步用下列判据检查。

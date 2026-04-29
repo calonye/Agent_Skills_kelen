@@ -1,3 +1,8 @@
+---
+description: 工作空间目录规范，定义仓库即根场景下的归属性质分类和目录结构
+parentRule: SKILL.md
+---
+
 # 工作空间目录规范 / Workspace Conventions
 
 > 基于 DocumentManagementStandard 的 skill 工作空间约定。

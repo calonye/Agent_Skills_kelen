@@ -18,6 +18,12 @@
 - Readme.md 技能清单链接加 `skills/` 前缀 (Update Readme.md skill links with `skills/` prefix)
 - Readme.md 目录结构更新为 `skills/` + `Project/` 两层 (Update Readme.md directory structure)
 - workspace-conventions.md 目录结构图和 REPO_PATH 更新 (Update workspace-conventions structure and REPO_PATH)
+- workspace-conventions.md 补齐 frontmatter (Add frontmatter to workspace-conventions.md)
+
+### 修正 (Fixed)
+
+- sub-patterns.md 标题从「三个子模式」修正为「子模式」（与实际五个子模式一致）(Fix sub-patterns title from "three" to generic)
+- 所有 references 文件补齐 frontmatter（parentRule + description），与 skill-design-principles.md 和 adapters/*.md 保持一致 (Add frontmatter to all references files for consistency)
 - 开发指导规范.md 更新 skill 开发流程路径和 REPO_PATH (Update steering doc skill path and REPO_PATH)
 - Project/Readme.md 新增本地研发工作空间说明 (Add Project/Readme.md for local workspace)
 

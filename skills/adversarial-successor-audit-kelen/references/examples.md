@@ -1,3 +1,8 @@
+---
+description: 对抗性接替者审计的通用场景案例
+parentRule: SKILL.md
+---
+
 # 实际案例：三层架构项目的迭代审计
 
 ## 背景

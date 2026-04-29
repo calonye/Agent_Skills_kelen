@@ -1,4 +1,9 @@
-# 三个子模式详解 / Sub-Patterns
+---
+description: 五个子模式详解（Bootstrap死循环/入库边界/AI可调用性/隐私扫描/目录树一致性）
+parentRule: SKILL.md
+---
+
+# 子模式详解 / Sub-Patterns
 
 ## 子模式 A：Bootstrap 死循环检测
 
