@@ -20,10 +20,10 @@ schedule: >-
   项目交付前、大批量改动提交前、工作流重构后、
   新增自动化脚本后、接入新 AI 工具后、
   合并到 main 前、项目交接前、CI/CD 流程变更后、
-  README 或 AGENTS.md 大幅修改后
+  README 或宿主入口规则大幅修改后
 metadata:
   author: kelen
-  version: 0.2.0
+  version: 0.3.0
 ---
 
 # 对抗性接替者审计 / Adversarial Successor Audit
@@ -40,7 +40,9 @@ metadata:
 
 ## 相关技能
 
-- `dialectical-self-review-kelen`：对审计范围或方案有质疑时，可先做辩证审查
+可选搭配（本 skill 完全独立，以下仅作辅助增强）：
+
+- `dialectical-self-review-kelen`：对审计范围或方案有质疑时，可搭配做辩证审查
 
 ## 流程
 
@@ -72,6 +74,7 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 **子模式 A — Bootstrap 死循环检测**
 > 生成物是否依赖生成器，而生成器本身也未入库？
 > 判据：`git clone` 后能否在不依赖任何 git-ignored 文件的情况下完成初始化？
+> Dry-Run 验证：不强求真实执行 clone+install，但需解析 install.sh / package.json / requirements.txt 检测所有外部依赖的可解析性（至少检查包名是否存在）。标注「dry-run 验证通过」vs「需要真实环境验证」。
 
 **子模式 B — 入库边界三层判据**
 > 每个文件是否放对了位置？
@@ -85,6 +88,7 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 
 **子模式 D — 提交内容隐私扫描**
 > 入库文件中是否包含个人路径、密钥、硬编码主机名等隐私信息？
+> 标准化扫描命令集见 `references/sub-patterns.md` 子模式 D。
 
 **子模式 E — 目录树一致性检验**
 > Readme.md 目录结构树是否与 `git ls-files` 实际内容严格对应？
@@ -94,6 +98,8 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 ### 4. 输出审计报告
 
 格式：
+
+以下为模板，<...> 标记需替换为实际内容。
 
 ```markdown
 # 对抗性接替者审计报告
@@ -118,11 +124,16 @@ clone → README → 安装依赖 → 初始化(setup) → 日常开发 → 提�
 - 中等: N 项
 - 轻微: N 项
 - 结论: <可交付 / 需修正后交付 / 不可交付>
+
+结论判定默认阈值（可由用户覆写）：
+- 严重项 ≥ 1 → 不可交付
+- 严重项 = 0 且中等项 ≥ 3 → 需修正后交付
+- 其余 → 可交付
 ```
 
 ## 不做什么
 
-- 不审查代码逻辑正确性（那是 code review / adversarial-review 的工作）
+- 不审查代码逻辑正确性；如需此类判断，应另启代码审查流程
 - 不审查 UI/UX 设计
 - 不修改任何文件（只读审计）
 - 不做性能分析

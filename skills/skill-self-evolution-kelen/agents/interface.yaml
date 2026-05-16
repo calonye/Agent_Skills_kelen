@@ -1,7 +1,8 @@
 name: skill-self-evolution-kelen
 description: >-
   在对话进行中实时识别新掌握的方法论，
-  以第一性原理判断可复用性后转化为 skill 包或迭代现有 skill。
+  以第一性原理判断可复用性后转化为 skill 包或迭代现有 skill，
+  并用结构验证、行为验证和目标运行时适配验证收尾。
   AI 的自我进化协议。
 inputs:
   - name: conversation_context
@@ -16,13 +17,24 @@ inputs:
     type: string
     description: "create（创建新 skill）/ iterate（迭代现有）/ auto（自动判断）"
     default: "auto"
+  - name: target_runtime
+    type: string
+    description: "目标运行时或宿主工具；为空时只输出通用结构与行为验证建议，部署适配不作为核心流程前置条件"
+    default: ""
+  - name: validation_level
+    type: string
+    description: "验证强度：light（结构 + 少量提示）/ standard（结构 + 行为 + 公开入口）/ release（增加对照与发布门禁）"
+    default: "standard"
 outputs:
   - name: evolution_report
     type: markdown
-    description: 自我进化报告（识别 + 判断 + 执行结果）
+    description: 自我进化报告（识别 + 4 层判断 + 用户决策 + 执行结果 + 验证结果）
   - name: skill_package
     type: directory
     description: 新建或修改的 skill 目录
+  - name: validation_report
+    type: markdown
+    description: 结构验证、行为验证、部署/发布验证和残余风险
 tools_required:
   - Read
   - Create
@@ -33,5 +45,10 @@ tools_required:
   - Glob
 constraints:
   - 必须通过 4 层第一性原理验证才转化
-  - 遵循 yao-meta-skill 规范
+  - 具体来源链路和外部对照名称不得写入 skill 执行规则
+  - 转化或迭代前必须等待用户确认独立创建、合入现有、跳过或待观察
+  - 产物必须遵循目标运行环境的 skill 包规范；环境适配层不得污染通用核心流程
+  - 创建或批量修改 skill 后必须做结构一致性审计
+  - 改了规则后必须做最小行为验证，不能只宣称文件已修改
+  - 来源描述默认抽象化，禁止写入私有路径、真实身份线索、未授权项目名或具体来源链路
   - 不修改非 skill 相关的项目文件

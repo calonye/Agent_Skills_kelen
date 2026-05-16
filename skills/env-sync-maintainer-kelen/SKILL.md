@@ -19,7 +19,7 @@ schedule: >-
   Skill 目录与上游不同步时
 metadata:
   author: kelen
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 # 环境同步维护者 / Env Sync Maintainer
@@ -46,6 +46,7 @@ metadata:
 - 当前 AI 工具是什么？（名称、版本）
 - Skill 存放位置和格式是什么？
 - 是否有已知的适配方案？（见 `references/adapters/`）
+- 若无法确定当前工具 → 列出所有检测到的候选并要求用户选择，或默认使用 `generic.md` 适配器 + 提示用户确认
 
 ### 2. 确定上游源
 
@@ -76,17 +77,20 @@ metadata:
 3. **原子写入**：
    - 所有修复操作使用写临时文件 + rename，防止进程中断导致文件损坏
 
+4. **同步前冲突检测**：
+   - 同步前 diff 对比上游和本地 SKILL.md
+   - 若有差异且本地非干净版本（已修改）→ 暂停同步并提示冲突，让用户选择保留本地/覆盖/合并
+   - 若本地为干净版本 → 直接覆盖同步
+
 ## 适配案例
 
 具体的工具/环境适配方案见 `references/adapters/` 目录：
-- `claude-code.md` — Claude Code 环境适配
-- `factory-droid.md` — Factory Droid 环境适配
-- `generic.md` — 通用环境适配模板
+- `references/adapters/` 中的具体运行时适配案例
 
 ## 不做什么
 
-- 不负责 Skill 内容的编写（那是 skill-creator）
-- 不负责 Skill 的逻辑审查（那是 `adversarial-successor-audit-kelen`）
+- 不负责 Skill 内容的编写，只负责环境同步、漂移识别和部署自愈
+- 不负责 Skill 的逻辑审查
 - 不修改非环境同步相关的配置文件
 
 ## 参考

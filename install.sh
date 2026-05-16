@@ -4,6 +4,14 @@ set -euo pipefail
 REPO_URL="https://github.com/calonye/Agent_Skills_kelen.git"
 REPO_NAME="Agent_Skills_kelen"
 SKILL_DIR="${SKILL_DIR:-$HOME/.claude/skills}"
+PUBLIC_SKILLS="${PUBLIC_SKILLS:-adversarial-successor-audit-kelen dialectical-self-review-kelen skill-self-evolution-kelen security-penetration-kelen}"
+
+is_public_skill() {
+  case " $PUBLIC_SKILLS " in
+    *" $1 "*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 
 # 优先使用环境变量；其次检测是否在仓库内执行；最后回退到默认克隆路径
 if [ -n "${INSTALL_DIR+x}" ]; then
@@ -31,12 +39,13 @@ else
   git clone "$REPO_URL" "$INSTALL_DIR"
 fi
 
-# 2. Deploy all skills
+# 2. Deploy public skills
 echo "[2/3] 部署 skills..."
 deployed=0
 for skill_dir in "$INSTALL_DIR/skills"/*/; do
   [ -f "$skill_dir/SKILL.md" ] || continue
   skill_name=$(basename "$skill_dir")
+  is_public_skill "$skill_name" || continue
 
   dst="$SKILL_DIR/$skill_name"
   mkdir -p "$dst"
@@ -92,4 +101,4 @@ echo "测试触发词："
 echo "  - 「帮我检查一下别人拿到这个项目能不能跑起来」→ adversarial-successor-audit-kelen"
 echo "  - 「思辨一下」→ dialectical-self-review-kelen"
 echo "  - 「提炼技能」→ skill-self-evolution-kelen"
-echo "  - 「同步一下配置」→ env-sync-maintainer-kelen"
+echo "  - 「授权 CTF 模式」→ security-penetration-kelen"

@@ -2,6 +2,46 @@
 
 本项目遵循 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.7.0] - 2026-04-30
+
+### 新增 (Added)
+
+- 新增 skill: `security-penetration-kelen` — 授权 CTF/靶场安全攻防审查、逆向解构与防御加固 (Add skill: security-penetration-kelen)
+- `security-penetration-kelen` 新增 `references/context-protocol.md` — CTF 授权上下文协议（合约确认、操作分级、证据记录与防御闭环）(Add authorized CTF context protocol)
+- `security-penetration-kelen` 新增 8 个 reference：analysis-priorities、context-protocol、evidence-chain、remediation-patterns、sandbox-contract、tool-orchestration、vulnerability-taxonomy、eval-prompts (Add 8 security skill references)
+- 新增 `scripts/validate-security-penetration.sh`，用于提交前验证安全 skill 的 YAML、引用、默认授权、危险语义和基础 secret 扫描 (Add validation script for security skill)
+- `dialectical-self-review-kelen` 新增 `references/eval-prompts.md` 与 `references/agent-assisted-review.md`，用于触发回归、边界验证和可选只读 Agent-assisted 升级 (Add eval prompts and optional agent-assisted review protocol)
+- 新增 `scripts/validate-dialectical-self-review.sh`，用于提交前验证辩证自审 skill 的 YAML、引用、触发关键语义、表格残留和本地路径污染 (Add validation script for dialectical self-review skill)
+- 新增 `scripts/validate-all.sh`，统一运行 shell 语法、两个重点 skill 验证、YAML/frontmatter、reference 引用闭合和 `git diff --check` (Add unified validation entrypoint)
+- `dialectical-self-review-kelen` 支持 AskUserQuestion/ClarificationRequest 可选澄清能力：证据未知且继续推进会制造关键假设时，最多提出 1 次、1-6 个最少澄清问题，支持多选；无工具时降级为文本待确认块 (Add optional AskUserQuestion/ClarificationRequest clarification gate)
+- `dialectical-self-review-kelen` 澄清节流规则增强为 `question_budget`：保留每轮最多 1 次、每次最多 6 问，同时新增 P0/P1/P2 优先级、延后确认队列、复杂迁移负例和同轮二次追问验证 (Add question budget, prioritization, deferred queue, and clarification throttling evals)
+- `skill-self-evolution-kelen` 新增 `references/structural-audit-methodology.md` — 通用结构一致性审计方法论：批量创建同类产物时的三步审计流程（提取基线→交叉对比→差异裁决）(Add structural audit methodology)
+- `skill-self-evolution-kelen/references/skill-design-principles.md` 验证原则新增第 4 条：批量创建后做结构一致性审计 (Add structural audit verification principle)
+- `skill-self-evolution-kelen` 新增行为验证、发布入口验证、隐私抽象化和运行时适配边界，并将研发来源与执行规则分离 (Add behavior validation, release gates, privacy abstraction, runtime boundaries, and separate R&D provenance from execution rules)
+- `skill-self-evolution-kelen` 移除仓库发布规范型 reference，避免工作空间适配规则混入独立 skill 包 (Remove workspace publishing reference from skill package to keep skill rules independent)
+- `dialectical-self-review-kelen` 新增 `references/known-blindspots.md` — AI 系统性认知盲区清单 (Add known cognitive blindspots reference)
+
+### 变更 (Changed)
+
+- **独立可用性重构**：所有 skill 解耦，交叉引用降级为「可选搭配」，移除「闭环」等依赖性语言 (Decouple all skills, make cross-references optional)
+  - `dialectical-self-review-kelen`：新增递归终止判据（防无限循环）+ 代码层面线索标记 + 证据三值/反事实检查 + 可选 AskUserQuestion/ClarificationRequest 澄清闸门 + 可选 Agent-assisted 升级协议；前置路由边界，避免抢占 brainstorming、代码审查、安全审查和交付审计 (Add recursive termination, code evidence markers, evidence ternary, counterfactual checks, optional clarification gate, optional Agent-assisted review, and route boundaries)
+  - `adversarial-successor-audit-kelen`：子模式 D 补充标准化 ripgrep 扫描命令集 + 子模式 A 新增 Dry-Run 验证 + 结论判定补充默认阈值 (Add scan commands, dry-run, default thresholds)
+  - `skill-self-evolution-kelen`：步骤③三层交互重构为单层一次性呈现 + 名称一致性检查前置 + 第4层判据拆分（已复用/预期复用）(Restructure step ③ from 3-layer to 1-layer, split criterion 4)
+  - `skill-design-principles.md` 交叉引用规范重写为独立可用性原则 (Rewrite cross-reference guidelines for independence)
+- 所有 SKILL.md 输出格式模板前加显式替换声明 (Add template replacement declarations to all output formats)
+- `Readme.md` 技能关系图改为独立节点图 + 版本号更新 + 新增 security-penetration-kelen skill (Update skill relationship diagram to independent nodes)
+- `.gitignore` 新增 `.cursor/` 本地计划与编辑器状态忽略，避免泄露未入库计划和思路演化痕迹 (Ignore local Cursor plans and editor state)
+- `security-penetration-kelen` 执行协议调整为授权 CTF/靶场语义：保留深度攻防、逆向、解构和受控 PoC 能力，并用三值授权状态、L0-L4 操作等级和防御闭环约束边界 (Reframe security skill around authorized CTF/sandbox semantics with L0-L4 levels and defensive closure)
+- `install.sh` 改为公开 skill 白名单部署，并补充 `security-penetration-kelen` 测试触发词，保持 README 与安装输出一致 (Deploy public skills by allowlist and add security-penetration-kelen trigger test to install.sh)
+- `Readme.md` 新增 `skill-self-evolution-kelen` 首次使用模板、确认后写入说明、边界和隐私提示 (Add first-use template, confirmation boundary, and privacy guidance for skill-self-evolution-kelen)
+
+### 版本变更 (Version Bumps)
+
+- adversarial-successor-audit-kelen：v0.2.0 → v0.3.0
+- dialectical-self-review-kelen：v0.2.0 → v0.3.0
+- skill-self-evolution-kelen：v0.2.0 → v0.3.0
+- security-penetration-kelen：新创建 → v0.1.0
+
 ## [0.6.0] - 2026-04-28
 
 ### 新增 (Added)

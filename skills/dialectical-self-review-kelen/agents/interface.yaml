@@ -1,8 +1,8 @@
 name: dialectical-self-review-kelen
 description: >-
-  在行动前对自己的方案做结构化自我反驳。
-  提取隐含假设 → 逐条反驳 → 反反驳 → 裁定 → 修正方案。
-  只读审查思考过程，输出辩证报告。
+  在已有方案、计划或决策准备执行前，对自己的思路做结构化自我反驳。
+  提取隐含假设 → 证据三值判断 → 必要澄清 → 反事实测试 → 反驳/反反驳 → 裁定 → 修正方案。
+  只读审查方案逻辑、假设、取舍和行动边界，输出辩证报告。
 inputs:
   - name: proposal
     type: string
@@ -10,20 +10,54 @@ inputs:
     required: false
   - name: focus
     type: string
-    description: "审查重点：architecture / workflow / data / security / all"
+    description: "审查重点：architecture / workflow / data / security-assumption / all；security-assumption 仅审查安全相关假设，不做漏洞验证"
     default: "all"
   - name: depth
     type: string
-    description: "审查深度：quick（3个核心论点）/ standard（所有论点）/ deep（含子论点递归）"
+    description: "审查深度：quick（3个核心论点）/ standard（所有论点）/ deep（含可选只读 Agent-assisted）"
     default: "standard"
+  - name: mode
+    type: string
+    description: "审查模式：self（默认单体自审）/ agent_assisted（用户明确要求或高风险时只读多视角审查）"
+    default: "self"
+  - name: can_ask_user
+    type: boolean
+    description: "是否可调用 AskUserQuestion/request_user_input/等价澄清工具；不可用时输出 ClarificationRequest 文本块"
+    default: false
+  - name: question_budget
+    type: object
+    description: "澄清预算：每轮最多 1 次请求，每次最多 6 个独立短答、多选或互斥选择问题，提问后必须停止等待回答"
+    default:
+      max_requests_per_turn: 1
+      max_questions_per_request: 6
+      requires_stop_after_request: true
 outputs:
   - name: dialectic_report
     type: markdown
-    description: 辩证报告（论点 + 反驳 + 裁定 + 修正方案）
+    description: 辩证报告（论点 + 证据三值 + 反事实 + 反驳 + 裁定 + 修正方案）
+  - name: clarification_questions
+    type: markdown
+    description: 待确认问题（仅输出 P0 阻塞问题，最多 6 个；支持 short_text/single_choice/multi_select；P1/P2 放入延后确认队列）
+  - name: clarification_budget
+    type: object
+    description: "实际澄清预算使用情况：requests_used_this_turn、questions_used_this_request、question_types、selected_options、requires_user_answer、fallback_path、deferred_questions"
+  - name: degraded_mode
+    type: string
+    description: "能力降级标记：none / ask_user_unavailable / agent_assisted_unavailable"
 tools_required:
   - Read (审查对话上下文和已有文件)
+tools_optional:
+  - AskUserQuestion (可选；用于证据不足且必须询问用户时)
+  - request_user_input (可选；AskUserQuestion 的等价澄清能力)
+  - Agent-assisted review (可选；高风险时只读多视角审查)
 constraints:
   - 不修改任何文件
-  - 不执行任何操作
+  - 不执行目标方案动作
+  - Agent-assisted 仅做只读审查，不作为硬依赖
+  - AskUserQuestion 不作为硬依赖；不可用时输出 ClarificationRequest
+  - 每轮最多一次澄清请求，最多 6 个问题；最多 6 是复杂场景上限，不是常规目标
+  - 多选题必须标记 multi_select，说明可选多个选项，并保留其他/不确定出口
+  - 只问 P0 阻塞项；P1/P2 未知必须进入延后确认队列
   - 每个论点必须有明确的 成立/推翻/修正 结论
+  - 证据未知时不得强行裁定为成立
   - 辩护不住要老实承认

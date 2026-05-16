@@ -1,0 +1,37 @@
+name: security-penetration-kelen
+description: >-
+  授权 CTF/靶场安全攻防审查——在用户明确授权范围内进行漏洞挖掘、
+  主动探测、受控 PoC、逆向解构、证据链构建与修复复测。
+inputs:
+  - name: target
+    type: string
+    description: 要审查的目标（Web/API/二进制/加密等）
+    required: true
+  - name: scope
+    type: string
+    description: '"passive"（被动侦察）/ "active"（主动探测）/ "poc"（受控 PoC）/ "ctf"（本地靶场深度验证）'
+    default: "passive"
+  - name: domain
+    type: string
+    description: '指定分析领域：Web/Backend/Binary/Pwn/Crypto/Identity/Cloud，留空则自动检测'
+    default: ""
+outputs:
+  - name: audit_report
+    type: markdown
+    description: 安全审查报告（CTF 合约 + 发现列表 + CVSS评分 + 证据链 + 防御修复 + 复测结果）
+tools_required:
+  - Read
+  - Shell
+  - Grep
+  - Glob
+  - LS
+tools_optional:
+  - browser_snapshot
+  - browser_network_requests
+  - browser_console_messages
+constraints:
+  - 不对沙箱外的目标执行任何操作
+  - 不泄露或存储真实凭据
+  - 不在生产环境执行破坏性测试
+  - 所有操作前必须确认目标在授权范围内
+  - 不把靶场 PoC 泛化为可迁移攻击指南
