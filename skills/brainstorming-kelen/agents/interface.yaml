@@ -1,0 +1,71 @@
+name: brainstorming-kelen
+description: >-
+  在需求或方案尚未定型时，做结构化头脑风暴。
+  输出目标重述、候选路径、多视角模拟、对抗审查、三值收敛和必要澄清。
+inputs:
+  - name: idea
+    type: string
+    description: 用户的想法、目标、功能、流程或方案探索请求；可从对话上下文自动提取
+    required: false
+  - name: scope
+    type: string
+    description: "探索范围：product / ux / architecture / workflow / skill-design / all"
+    default: "all"
+  - name: depth
+    type: string
+    description: "发散深度：quick（2条路径）/ standard（3条路径）/ deep（最多5条路径和更多视角）"
+    default: "standard"
+  - name: mode
+    type: string
+    description: "执行模式：single_actor / sequential_simulation / parallel_review；并发是可选优化，不是硬依赖"
+    default: "single_actor"
+  - name: can_ask_user
+    type: boolean
+    description: "是否可调用 AskUserQuestion/request_user_input/等价澄清工具；不可用时输出 ClarificationRequest 文本块"
+    default: false
+  - name: question_budget
+    type: object
+    description: "澄清预算：每轮最多 1 次请求；常规 0-3 问，复杂高风险最多 6 问；提问后必须停止等待回答"
+    default:
+      max_requests_per_turn: 1
+      normal_target_questions: 3
+      max_questions_per_request: 6
+      requires_stop_after_request: true
+outputs:
+  - name: brainstorm_report
+    type: markdown
+    description: 头脑风暴报告（目标重述、已知信息、待确认、候选路径、推荐）
+  - name: perspective_simulation
+    type: markdown
+    description: 多视角模拟结论（三值裁定 + 证据包 + 风险 + 修正 + 复验）
+  - name: adversarial_check
+    type: markdown
+    description: 对抗审查（反例、失败模式、范围风险、隐私或内容边界风险）
+  - name: clarification_request
+    type: markdown
+    description: 待确认问题（仅 P0 阻塞问题；支持 short_text/single_choice/multi_select；P1/P2 放入延后确认队列）
+  - name: decision_options
+    type: markdown
+    description: 候选路径裁定（成立 / 修正 / 推翻）和下一步建议
+  - name: interaction_mode
+    type: string
+    description: "用户澄清或方向裁定呈现方式：native_tool / text_fallback / not_needed；文本降级必须说明原因"
+tools_required:
+  - Read
+tools_optional:
+  - AskUserQuestion
+  - request_user_input
+  - Read-only search
+  - Parallel review
+constraints:
+  - 不修改任何文件
+  - 不执行实现、提交、发布或不可逆操作
+  - 不要求真实多 agent，不要求外部并发框架
+  - AskUserQuestion 不作为硬依赖；不可用时输出 ClarificationRequest
+  - 本轮暴露支持题型的等价原生交互能力时必须先实际调用并在成功呈现后标记 native_tool；仅未暴露或真实调用产生可观察失败证据时才 text_fallback
+  - 每轮最多一次澄清请求；常规 0-3 问，最多 6 问只用于复杂高风险场景
+  - 多选题必须标记 multi_select，说明可选多个选项，并保留其他/不确定出口
+  - 只问 P0 阻塞项；P1/P2 未知必须进入延后确认队列
+  - 每个候选路径必须有 成立 / 修正 / 推翻 裁定
+  - 待确认只是证据状态，不是第四种裁定
+  - 关键证据未知时不得裁定为成立

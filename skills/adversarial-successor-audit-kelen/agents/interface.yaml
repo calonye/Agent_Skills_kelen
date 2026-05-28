@@ -11,22 +11,71 @@ inputs:
   - name: scope
     type: string
     description: "full（全量）或 diff（仅增量改动）"
+    enum:
+      - full
+      - diff
     default: "full"
   - name: focus
     type: string
     description: "审计重点：docs / scripts / workflow / ci / all"
+    enum:
+      - docs
+      - scripts
+      - workflow
+      - ci
+      - all
     default: "all"
+  - name: mode
+    type: string
+    description: "审计模式：single（默认单体审计）/ multi_perspective（多视角交叉审计）"
+    enum:
+      - single
+      - multi_perspective
+    default: "single"
+  - name: perspective_set
+    type: array
+    description: "多视角角色：newcomer / docs / automation / release / privacy；为空时使用默认五角色"
+    default: []
+  - name: execution_strategy
+    type: string
+    description: "执行策略：single_actor / sequential_simulation / parallel_review；并发是可选优化，不是硬依赖"
+    enum:
+      - single_actor
+      - sequential_simulation
+      - parallel_review
+    default: "single_actor"
+  - name: dependency_policy
+    type: string
+    description: "依赖策略：no_external_required / optional_enhancement_only；缺少搜索或命令能力时继续基于文件证据审计"
+    enum:
+      - no_external_required
+      - optional_enhancement_only
+    default: "no_external_required"
 outputs:
   - name: audit_report
     type: markdown
     description: 审计报告（发现列表 + 严重度 + 修正建议）
+  - name: perspective_report
+    type: markdown
+    description: multi_perspective 模式下的角色结论（三值裁定 + 证据 + 修复 + 复验）；single 模式可省略
+  - name: synthesis_report
+    type: markdown
+    description: multi_perspective 模式下的交叉合并报告（共识 + 冲突 + 采纳理由 + 残余风险）；single 模式可省略
 tools_required:
   - Read
-  - Execute (read-only commands only)
-  - Grep
-  - Glob
-  - LS
+tools_optional:
+  - run_readonly_commands
+  - search_text
+  - list_files
+  - inspect_file_tree
 constraints:
   - 不修改任何文件
   - 不执行写入操作
   - 不执行 git commit / push
+  - 多视角模式仍是只读审计；无并发能力时按角色顺序模拟，并在报告中标注 execution_strategy
+  - multi_perspective 不要求真实多 agent，不要求外部并发框架
+  - 搜索、列目录、只读命令能力缺失时，继续基于文件证据审计，并把无法复验项标为待确认
+  - 每个角色必须输出 成立 / 修正 / 推翻 的三值裁定
+  - 待确认只是证据状态，不是第四种裁定；证据不足时不得裁为成立
+  - 有推翻项或未验证 P0 风险时，不得给出可交付结论
+  - 修复闭环必须标明仅建议、已修复、已复验或待确认，不得把建议当成风险关闭

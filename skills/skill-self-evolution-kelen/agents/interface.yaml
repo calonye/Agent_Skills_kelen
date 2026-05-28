@@ -1,9 +1,11 @@
 name: skill-self-evolution-kelen
 description: >-
-  在对话进行中实时识别新掌握的方法论，
-  以第一性原理判断可复用性后转化为 skill 包或迭代现有 skill，
-  并用结构验证、行为验证和目标运行时适配验证收尾。
-  AI 的自我进化协议。
+  Skill 生命周期进化引擎。用户要求普通创建、设计、维护、迭代、改进、自我进化或进化 skill 时使用；
+  用户说“记住这个方法”“以后别忘”“沉淀成规则”，
+  或 AI 识别到当前对话形成了可复用判断框架、工作流、触发矩阵或方法论时也使用。
+  用户要求审查、改进或迭代已有 skill 是否达到设计目的时，先用本流程做需求覆盖和证据审查。
+  先做思辨/澄清/调研前置协议和生命周期 4 层判断，再由用户确认创建、合入、跳过或待观察；
+  最后用结构验证、触发覆盖验证、行为验证和目标运行时适配验证收尾。
 inputs:
   - name: conversation_context
     type: string
@@ -15,7 +17,7 @@ inputs:
     default: ""
   - name: mode
     type: string
-    description: "create（创建新 skill）/ iterate（迭代现有）/ auto（自动判断）"
+    description: "create（创建新 skill）/ design（设计）/ maintain（维护）/ iterate（迭代现有）/ improve（改进）/ self_evolve（自我进化）/ evolve（进化）/ auto（自动判断）"
     default: "auto"
   - name: target_runtime
     type: string
@@ -25,30 +27,76 @@ inputs:
     type: string
     description: "验证强度：light（结构 + 少量提示）/ standard（结构 + 行为 + 公开入口）/ release（增加对照与发布门禁）"
     default: "standard"
+  - name: interaction_capabilities
+    type: object
+    description: "本轮暴露的交互式提问或选择能力：exposure、question_types、question_capacity、invocation_result；未暴露或实际调用失败时按证据文本降级"
+    required: false
 outputs:
+  - name: lifecycle_report
+    type: markdown
+    description: 生命周期报告（任务类型 + 用户目的 + 前置协议结果 + 决策依据 + 执行路径 + 验证状态 + 残余风险）
+  - name: predecision_report
+    type: markdown
+    description: 思辨/澄清/调研/决策准备报告（澄清门槛 + 证据调研 + 反方质疑 + 三值裁定 + 复验方式）
   - name: evolution_report
     type: markdown
-    description: 自我进化报告（识别 + 4 层判断 + 用户决策 + 执行结果 + 验证结果）
+    description: 方法论进化报告（识别 + 4 层判断 + 用户决策 + 执行结果 + 验证结果）
+  - name: requirement_coverage_report
+    type: markdown
+    description: 已有 skill 迭代时的需求覆盖报告（用户目的 + 当前证据 + 缺口 + 三值裁定 + 修复顺序）
+  - name: capability_equivalence_report
+    type: markdown
+    description: 融合、借鉴或替代某流程效果时的能力等价报告（目标能力 + 当前覆盖 + 裁定 + 缺口 + 复验）
   - name: skill_package
     type: directory
     description: 新建或修改的 skill 目录
   - name: validation_report
     type: markdown
-    description: 结构验证、行为验证、部署/发布验证和残余风险
+    description: 结构验证、触发覆盖验证、行为验证、部署/发布验证、真实触发状态和残余风险
+  - name: interaction_decision
+    type: object
+    description: "仅需用户澄清、授权或裁定时输出：interaction_mode、question_types、native_tool_candidate、native_tool_status、fallback_reason、capability_evidence、requires_user_answer"
 tools_required:
   - Read
+tools_optional:
   - Create
   - Edit
   - Execute
   - LS
   - Grep
   - Glob
+  - interactive_question_or_selection
+  - AskUserQuestion
+  - request_user_input
 constraints:
-  - 必须通过 4 层第一性原理验证才转化
+  - 主要职责是 skill 的创建、设计、维护、迭代、改进和进化；思辨、对抗审查、多视角模拟、澄清问题和能力等价只是质量机制
+  - 审查、维护、迭代、改进或自我进化 skill 时，必须检查收敛、约束、稳定、通用性、兼容性、解耦性、扩展性和独立性，并标注已覆盖、需修正或不适用
+  - 进入判断和写文件前必须执行思辨/澄清/调研/决策准备前置协议；低风险小改动可简化，但必须记录简化原因
+  - 必须通过生命周期 4 层第一性原理验证才转化或修改
+  - 目标、运行时、发布范围、写入边界或隐私边界不清时，先澄清；每轮最多 1 次，每次最多 6 问，支持多选
   - 具体来源链路和外部对照名称不得写入 skill 执行规则
   - 转化或迭代前必须等待用户确认独立创建、合入现有、跳过或待观察
   - 产物必须遵循目标运行环境的 skill 包规范；环境适配层不得污染通用核心流程
+  - 用户要求创建、设计、维护、迭代、改进或进化 skill 时，必须先判断生命周期任务类型，不得把主职责降级为单纯方法论沉淀
+  - 普通创建 skill 同样必须先进入本生命周期入口并判为创建；可走轻量创建分支，但不得绕开入口
+  - 用户要求改进已有 skill 或审查过往改动是否落实时，必须先输出需求覆盖报告，不得直接进入普通创建流程
+  - 目标是本 skill 时必须自我适用：先审查本 skill 的触发、解耦、验证和真实行为缺口，再决定修改
+  - 本 skill 自审后若被用户反馈、参考对照或真实运行证据指出有效缺口，必须将前次自审标为未完全成功，并回流为规则门禁、回归样例或验证脚本检查
+  - 用户提供参考对象、声称融合/替代，或自审后出现新缺口时，必须做参考对照；未读取相关参考对象前不得写无优化点
+  - 重复、确定性、格式严格、可自动验证或易漏检查的质量要求必须做脚本适配裁定；不创建脚本时说明原因
+  - 脚本语言选择优先复用仓库既有工具链；跨环境长期维护、性能敏感、并发/文件遍历密集或稳定分发场景优先 Rust，其次选择目标环境稳定具备的高性能脚本/运行时
+  - 自我进化必须有递归终止边界；一次只处理当前用户目的下的 P0/P1 缺口，新增非阻断问题写入 improvement_candidate 或待观察
+  - 维护、改进和自我进化必须走独立执行路径，不得全部折叠为普通迭代
+  - 版本号必须按 SemVer 裁定：修错或触发补强为 patch，新增能力或输出契约为 minor，破坏兼容为 major 且先确认
+  - 用户要求融合、借鉴或替代某流程效果时，必须输出能力等价报告；只能在触发、流程、输出、边界和验证均覆盖时声明等价
   - 创建或批量修改 skill 后必须做结构一致性审计
+  - 创建或修改触发语义时必须做触发覆盖矩阵检查：用户自然口语、AI 推理触发、发现层关键词、误触发边界
   - 改了规则后必须做最小行为验证，不能只宣称文件已修改
+  - 验证结论必须拆分为静态文件覆盖、当前会话按规则执行、新会话真实触发三类状态
   - 来源描述默认抽象化，禁止写入私有路径、真实身份线索、未授权项目名或具体来源链路
   - 不修改非 skill 相关的项目文件
+  - 目标 skill 涉及澄清、授权或裁定选项时，本轮暴露支持题型的原生能力就必须先实际调用；仅未暴露或调用产生可观察失败证据时文本降级并记录候选、状态和原因
+  - 原生或文本交互包含候选选项时，必须为每个选项提供核心逻辑理由或取舍影响；需要 AI 倾向时，单选只标 1 个推荐项，多选可标推荐组合，证据不足时不得强行推荐
+  - AskUserQuestion 和 request_user_input 均不是硬依赖；应以宿主提供的等价交互能力适配
+  - 创建或迭代会生成真实会话记录、附件或执行历史的 skill 时，公共规则与私有运行产物必须解耦
+  - 子 skill 执行业务职责时不得自动改写自身规则；缺陷应作为改进候选回流到生命周期审查

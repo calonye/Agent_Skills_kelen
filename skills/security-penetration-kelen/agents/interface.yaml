@@ -18,20 +18,33 @@ inputs:
 outputs:
   - name: audit_report
     type: markdown
-    description: 安全审查报告（CTF 合约 + 发现列表 + CVSS评分 + 证据链 + 防御修复 + 复测结果）
+    description: 安全审查报告（CTF 合约 + 发现列表 + 严重度/CVSS 状态 + 证据链 + 防御修复 + 复测结果）
+  - name: authorization_clarification
+    type: markdown
+    description: 授权或范围不完整时的 ClarificationRequest；只问目标、范围、授权等级、允许动作、禁止动作和防御目标等 P0 项
+  - name: interaction_mode
+    type: string
+    description: "授权澄清呈现方式：native_tool / text_fallback / not_needed；文本降级必须说明原因"
 tools_required:
   - Read
+tools_optional:
   - Shell
   - Grep
   - Glob
   - LS
-tools_optional:
   - browser_snapshot
   - browser_network_requests
   - browser_console_messages
+  - interactive_question_or_selection
+  - AskUserQuestion
+  - request_user_input
 constraints:
   - 不对沙箱外的目标执行任何操作
   - 不泄露或存储真实凭据
   - 不在生产环境执行破坏性测试
   - 所有操作前必须确认目标在授权范围内
   - 不把靶场 PoC 泛化为可迁移攻击指南
+  - 授权不完整时只做 L0 被动分析，并输出 ClarificationRequest
+  - 本轮暴露支持题型的等价原生交互能力时必须先实际调用并在成功呈现后标记 native_tool；仅未暴露或真实调用产生可观察失败证据时才 text_fallback
+  - AskUserQuestion 和 request_user_input 均不是硬依赖；沉默不构成主动验证授权
+  - 证据不足时不得伪造 CVSS 精确评分

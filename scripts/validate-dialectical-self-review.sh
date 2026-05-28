@@ -29,7 +29,7 @@ body = File.read(File.join(skill, "SKILL.md"))
 frontmatter = body[/\A---\n(.*?)\n---/m, 1]
 raise "missing SKILL.md frontmatter" unless frontmatter
 meta = YAML.safe_load(frontmatter, permitted_classes: [], aliases: false)
-raise "metadata.version must be 0.3.0" unless meta.dig("metadata", "version") == "0.3.0"
+raise "metadata.version must be 0.3.2" unless meta.dig("metadata", "version") == "0.3.2"
 
 interface = YAML.safe_load(File.read(File.join(skill, "agents/interface.yaml")), permitted_classes: [], aliases: false)
 mode = interface.fetch("inputs").find { |item| item["name"] == "mode" }
@@ -60,7 +60,7 @@ missing_required = required_refs - refs
 raise "SKILL.md does not reference: #{missing_required.join(", ")}" unless missing_required.empty?
 RUBY
 
-for phrase in "证据三值" "反事实" "Agent-assisted" "known-blindspots" "brainstorming" "security-penetration-kelen" "AskUserQuestion" "ClarificationRequest" "question_budget" "P0" "延后确认队列" "成立" "推翻" "修正"; do
+for phrase in "证据三值" "反事实" "Agent-assisted" "known-blindspots" "结构化头脑风暴流程" "security-penetration-kelen" "AskUserQuestion" "ClarificationRequest" "question_budget" "interaction_mode" "native_tool" "text_fallback" "必须实际调用" "P0" "延后确认队列" "成立" "推翻" "修正"; do
   rg -n "$phrase" "$SKILL" >/dev/null || fail "missing required phrase: $phrase"
 done
 
@@ -117,6 +117,17 @@ raise "missing multi-select clarification fallback eval prompt" unless multi
   /questions_used_this_request/
 ].each do |pattern|
   raise "multi-select clarification eval missing #{pattern.inspect}" unless multi.match?(pattern)
+end
+
+native = body[/^## Prompt \d+：原生选项能力不可被文字替代.*?(?=^## Prompt |\z)/m]
+raise "missing native interaction eval prompt" unless native
+[
+  /必须实际调用/,
+  /interaction_mode: native_tool/,
+  /text_fallback/,
+  /普通文字选项|Markdown 选项列表/
+].each do |pattern|
+  raise "native interaction eval missing #{pattern.inspect}" unless native.match?(pattern)
 end
 RUBY
 

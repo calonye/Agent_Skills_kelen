@@ -6,6 +6,9 @@ Project/
 # Cursor 本地计划和编辑器状态（不入库）
 .cursor/
 
+# 孵化中 skill：暂不进入公开发布跟踪集，成熟后再移回 skills/
+skills/env-sync-maintainer-kelen/
+
 # 部署脚本含本机绝对路径（不入库）
 **/update.sh
 

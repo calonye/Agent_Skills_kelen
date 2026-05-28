@@ -1,0 +1,86 @@
+name: session-handoff-kelen
+description: >-
+  治理会话连续性：生成有结束证据的轻量日志、条件式详细交付物、恢复抽查结果、子 Agent 证据索引和受授权附件引用。
+inputs:
+  - name: handoff_request
+    type: string
+    description: 用户明确交接请求、宿主可观察信号或规则义务
+    required: false
+  - name: workspace
+    type: string
+    description: 目标项目根目录；仅用于解析项目声明的记录目录
+    default: ""
+  - name: documentation_root
+    type: string
+    description: 项目规则确认的研发文档根目录；仓库即根场景通常为 Project/Docs
+    default: ""
+  - name: host_context_signal
+    type: string
+    description: "宿主明确提供的上下文状态：none / pressure / compact / ending / measured；不可推测百分比"
+    default: "none"
+  - name: continuation_required
+    type: boolean
+    description: 是否已确认未完成任务需要跨会话续接；普通会话结束默认 false
+    default: false
+  - name: requested_mode
+    type: string
+    description: "请求模式：auto / end_log / detailed_handoff / restore_verify / compression_hygiene"
+    default: "auto"
+  - name: invocation_source
+    type: string
+    description: "调用来源：conversational / host_event / rule_route；host_event 必须有运行证据"
+    default: "conversational"
+  - name: authorization
+    type: object
+    description: "摘要、完整子 Agent 内容和附件的逐次授权状态"
+    required: false
+outputs:
+  - name: session_end_log
+    type: markdown
+    description: 每个真实结束会话的轻量日志；不承载详细交付内容
+  - name: handoff_deliverable
+    type: markdown
+    description: 仅在续接、需要形成跨会话持续材料的压缩/恢复治理或明确详细记录需要时产生的独立交付物
+  - name: context_index
+    type: ison
+    description: 会话、子 Agent 和已授权附件的导航元数据索引
+  - name: continuation_entry
+    type: markdown
+    description: 新会话可读取的续接入口；默认不作为仓库通用模板持久化
+  - name: handoff_decision
+    type: object
+    description: "处理模式、触发原因、规则冲突与持久化范围：continuity_action / trigger_reason / rule_conflict / persistence_scope"
+  - name: recovery_assessment
+    type: markdown
+    description: 恢复读取时对已有记录完成声明的抽查结果
+  - name: improvement_candidate
+    type: markdown
+    description: 执行中发现的协议改进候选；不自动修改规则文件
+tools_required:
+  - Read
+tools_optional:
+  - Write
+  - interactive_question_or_selection
+  - AskUserQuestion
+  - request_user_input
+constraints:
+  - 只处理会话连续性、结束记录、交接和恢复验证，不执行目标任务本身
+  - 会话是宿主管理的主上下文生命周期；同一会话内的普通对话不产生任何持久化文件
+  - 每个真实结束会话生成轻量结束日志；无续接或治理需要时不创建详细交付物
+  - 请求 end_log 不替代结束证据；未取得用户明确结束当前真实会话或已验证宿主结束事件时不得写入日志
+  - 不固定上下文百分比；优先遵循用户明确要求、项目或全局规则以及宿主可观察预设
+  - 默认不生成摘要压缩；脱敏摘要需要明确授权
+  - 默认只保存子 Agent 任务、结论与脱敏证据引用；完整内容和截图逐次授权
+  - 每个结束日志和每个详细交付物必须是独立文件，不持续覆盖旧文件
+  - ISON 仅存最小导航元数据，主题默认采用非敏感短标签或 redacted，不存完整对话或私密附件内容
+  - 本轮暴露支持题型的原生交互能力时必须先实际调用；仅未暴露或真实调用产生拒绝、不可用、题型不支持等证据时才文本降级，并记录候选、状态、原因和证据来源
+  - 澄清、授权或裁定前必须执行推理/思维链基本要求的可审计版本：目标重述、证据检查、不确定性、反方风险和最小决策；不得输出完整隐藏思维链
+  - 单选或互斥选择必须标 1 个推荐项，多选可标推荐组合；每个选项必须包含核心逻辑理由或取舍影响
+  - AskUserQuestion 和 request_user_input 均不是硬依赖；任何等价交互能力均可适配
+  - 不自动修改本 skill 或追加真实执行历史到公共 skill 目录
+  - 带真实项目路径或当前状态的续接入口不得默认写为仓库通用模板
+  - 具体交付物只写入权威研发文档根目录，不默认写入面向外部的公开 Docs 区域
+  - 公共规则包、私有交付物、索引、附件引用和真实运行记录必须解耦；不得将协议、模板、索引和附件混成单一文件
+  - 写入研发文档前必须记录 pre_record_basis，写入后必须记录 post_record_verification；缺少前后记录时不得声明交付完成
+  - 恢复读取时对关键完成声明做证据抽查，不将既有交付物直接视为事实
+  - 已安装 skill 可覆盖口语触发；无消息的宿主事件自动执行必须有已验证的事件路由证据

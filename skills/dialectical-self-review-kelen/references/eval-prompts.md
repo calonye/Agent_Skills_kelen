@@ -13,7 +13,7 @@ parentRule: SKILL.md
 - 待确认：方案不完整、证据不足、用户目标不清。
 - 不适用：早期发散、代码 diff review、安全漏洞审查、交付新人可用性审计等应转交其他流程。
 - 输出必须包含证据三值、反事实、成立/推翻/修正、修正后方案。
-- AskUserQuestion/ClarificationRequest 仅在缺失信息会改变行动边界或裁定时使用；每轮最多 1 次、最多 6 个问题，支持多选。
+- AskUserQuestion/ClarificationRequest 仅在缺失信息会改变行动边界或裁定时使用；每轮最多 1 次、最多 6 个问题，支持多选。宿主提供匹配题型的交互式能力时必须实际调用并记录 `interaction_mode: native_tool`，否则记录文本降级原因。
 - 最多 6 是复杂高风险场景上限，不是常规目标；低风险任务应保持 1-3 个最少问题或不提问。
 - 只问 P0 阻塞项；P1/P2 未知进入延后确认队列，不得静默丢弃。
 
@@ -52,7 +52,7 @@ parentRule: SKILL.md
 
 期望：
 - 不触发本 skill
-- 转交 `brainstorming`
+- 转交结构化头脑风暴流程
 - 说明原因：需求尚未形成候选方案
 
 ## Prompt 4：安全漏洞审查
@@ -152,3 +152,16 @@ parentRule: SKILL.md
 - 若 AskUserQuestion/request_user_input 不支持多选或 6 问容量，降级为 1 个 ClarificationRequest 文本块
 - 多选题明确写出“可多选”，并提供「其他/不确定」出口
 - 不把多选答案数量计入问题数量；以 questions_used_this_request 统计问题条目
+
+## Prompt 11：原生选项能力不可被文字替代
+
+输入：
+```text
+这一步需要我在两种风险方案之间裁定。当前环境支持交互式选择，请用选择控件让我确认。
+```
+
+期望：
+- 触发本 skill 的 P0 裁定确认。
+- 若宿主提供支持题型的交互式能力，必须实际调用并记录 `interaction_mode: native_tool`。
+- 不得只输出 Markdown 选项列表并声称已提供交互选择。
+- 若候选未暴露或真实调用返回拒绝、不可用、题型不支持证据，输出一个文本降级请求，标记 `interaction_mode: text_fallback`，保留候选、状态及原因并等待回答。

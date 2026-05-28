@@ -44,6 +44,9 @@ outputs:
   - name: degraded_mode
     type: string
     description: "能力降级标记：none / ask_user_unavailable / agent_assisted_unavailable"
+  - name: interaction_mode
+    type: string
+    description: "用户澄清呈现方式：native_tool / text_fallback / not_needed；文本降级必须说明原因"
 tools_required:
   - Read (审查对话上下文和已有文件)
 tools_optional:
@@ -55,6 +58,7 @@ constraints:
   - 不执行目标方案动作
   - Agent-assisted 仅做只读审查，不作为硬依赖
   - AskUserQuestion 不作为硬依赖；不可用时输出 ClarificationRequest
+  - 本轮暴露支持题型的等价原生交互能力时必须先实际调用并在成功呈现后标记 native_tool；仅未暴露或真实调用产生可观察失败证据时才 text_fallback
   - 每轮最多一次澄清请求，最多 6 个问题；最多 6 是复杂场景上限，不是常规目标
   - 多选题必须标记 multi_select，说明可选多个选项，并保留其他/不确定出口
   - 只问 P0 阻塞项；P1/P2 未知必须进入延后确认队列

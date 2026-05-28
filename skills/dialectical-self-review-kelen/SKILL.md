@@ -10,6 +10,8 @@ description: >-
   「你确定？再想想」「方案有没有漏洞」「逻辑有没有问题」「挑挑毛病」
   「别急，先自己审视一下」「你的方案有没有什么假设是错的」
   「反驳一下你自己的想法」「思辨一下」「对抗性审查你的思考」
+  「这样靠谱吗」「会不会翻车」「有没有更稳的做法」
+  「先帮我挑这个方案的毛病」「我怕这里有坑」「这个决定风险大不大」
   触发场景（AI 自我思考）：
   「这个方案有多个假设，我应该在行动前逐一验证」
   「用户没有明确说这样做，我可能做了隐含假设」
@@ -27,7 +29,7 @@ schedule: >-
   自审出现证据未知或无法裁定时
 metadata:
   author: kelen
-  version: 0.3.0
+  version: 0.3.2
 ---
 
 # 辩证自我审查 / Dialectical Self-Review
@@ -103,7 +105,7 @@ AskUserQuestion 是可选澄清能力，不是硬依赖。仅当以下条件同�
 - 问题类型必须明确为短答、互斥选择或多选；多选题需说明可选多个选项并保留「其他/不确定」出口
 - 同时给出无回答时的保守路径：停止、只读、降级或待确认
 
-若运行环境有 AskUserQuestion / request_user_input / 等价提问工具，且该工具支持当前问题数量和多选语义，可用该工具询问；若没有或能力不足，输出 `ClarificationRequest` 文本块，不得拆成第二次追问，不得编造用户回答。
+若本轮工具目录或宿主接口暴露 AskUserQuestion / request_user_input / 等价原生交互能力，且该能力支持当前问题数量和多选语义，必须先实际调用；成功呈现交互后才标记 `interaction_mode: native_tool`，不得仅用普通文本列出选项冒充工具已触发。只有候选未暴露，或真实调用返回拒绝、不可用、题型不支持等可观察证据时，才输出一个 `ClarificationRequest` 文本块并记录 `interaction_mode: text_fallback`、候选工具、状态、降级原因和证据来源；不得拆成第二次追问，不得编造用户回答。
 
 question_budget 默认值：
 - max_requests_per_turn: 1
@@ -122,7 +124,7 @@ question_budget 默认值：
 - 有没有反例？
 - 有没有用户明确说过相反的话？
 - 最坏情况是什么？
-- 如果一个有洁癖的人接手，他会怎么看？
+- 如果一个严格接手者只看证据和边界，他会怎么判断？
 - 是否有代码层面的线索支持？路径硬编码、权限缺口、竞态逻辑——若发现，记录为证据但不审查代码本身，标记为「待代码审查的思维盲区线索」
 - 如果选择相反方案会怎样？
 - 如果用户环境、权限、时间窗口或输入条件不同会怎样？
@@ -199,6 +201,7 @@ Agent 结果只作为证据输入，不替代最终裁定。汇总时标注：�
 
 ### 待确认项
 - **ClarificationRequest**: <仅当下一步必须询问用户时填写；否则写“无”>
+- **interaction_mode**: <native_tool / text_fallback / not_needed；text_fallback 时写明原因>
 - **question_budget**: max_requests_per_turn=1; max_questions_per_request=6; requires_stop_after_request=true
 - **本轮问题**: <1-6 个 P0 阻塞问题；短答、多选或互斥选择>
 - **延后确认队列**: <P1/P2 未知；说明为什么本轮不问>
@@ -224,7 +227,7 @@ Agent 结果只作为证据输入，不替代最终裁定。汇总时标注：�
 
 - 不审查代码语法或逻辑（那是 code review）
 - 不审查系统对新人的可用性（那是 `adversarial-successor-audit-kelen`）
-- 不发散探索新方案（那是 `brainstorming`，内置 skill）
+- 不发散探索新方案（那是结构化头脑风暴流程）
 - 不把方法论固化为 skill（那是 `skill-self-evolution-kelen`，但本 skill 可触发它）
 - 不做无目的的哲学讨论 — 每个论点必须有明确的「成立/推翻/修正」结论
 

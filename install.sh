@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_URL="https://github.com/calonye/Agent_Skills_kelen.git"
 REPO_NAME="Agent_Skills_kelen"
 SKILL_DIR="${SKILL_DIR:-$HOME/.claude/skills}"
-PUBLIC_SKILLS="${PUBLIC_SKILLS:-adversarial-successor-audit-kelen dialectical-self-review-kelen skill-self-evolution-kelen security-penetration-kelen}"
+PUBLIC_SKILLS="${PUBLIC_SKILLS:-adversarial-successor-audit-kelen brainstorming-kelen dialectical-self-review-kelen skill-self-evolution-kelen security-penetration-kelen}"
 
 is_public_skill() {
   case " $PUBLIC_SKILLS " in
@@ -31,7 +31,9 @@ echo "仓库本地路径:   $INSTALL_DIR"
 echo ""
 
 # 1. Clone or pull
-if [ -d "$INSTALL_DIR/.git" ]; then
+if [ -d "$INSTALL_DIR/.git" ] && [ "$(cd "$INSTALL_DIR" && pwd)" = "$(pwd)" ]; then
+  echo "[1/3] 使用当前仓库，跳过拉取..."
+elif [ -d "$INSTALL_DIR/.git" ]; then
   echo "[1/3] 仓库已存在，拉取最新版本..."
   git -C "$INSTALL_DIR" pull --ff-only
 else
@@ -49,7 +51,7 @@ for skill_dir in "$INSTALL_DIR/skills"/*/; do
 
   dst="$SKILL_DIR/$skill_name"
   mkdir -p "$dst"
-  rsync -av --exclude='update.sh' "$skill_dir" "$dst/" > /dev/null 2>&1
+  rsync -av --exclude='update.sh' --exclude='.DS_Store' --exclude='._*' "$skill_dir" "$dst/" > /dev/null 2>&1
 
   # Generate update.sh for future syncs
   cat > "$skill_dir/update.sh" <<EOF
@@ -59,7 +61,7 @@ SKILL_NAME="$skill_name"
 DST="$SKILL_DIR/\$SKILL_NAME"
 [ ! -d "\$REPO_PATH/\$SKILL_NAME" ] && echo "源目录不存在" && exit 1
 mkdir -p "\$DST"
-rsync -av --exclude='update.sh' "\$REPO_PATH/\$SKILL_NAME/" "\$DST/"
+rsync -av --exclude='update.sh' --exclude='.DS_Store' --exclude='._*' "\$REPO_PATH/\$SKILL_NAME/" "\$DST/"
 echo "\$SKILL_NAME 已更新"
 EOF
   chmod +x "$skill_dir/update.sh"
@@ -99,6 +101,7 @@ echo "后续更新运行: $update_all"
 echo ""
 echo "测试触发词："
 echo "  - 「帮我检查一下别人拿到这个项目能不能跑起来」→ adversarial-successor-audit-kelen"
+echo "  - 「先发散一下方案」→ brainstorming-kelen"
 echo "  - 「思辨一下」→ dialectical-self-review-kelen"
-echo "  - 「提炼技能」→ skill-self-evolution-kelen"
+echo "  - 「帮我创建一个普通 skill」→ skill-self-evolution-kelen"
 echo "  - 「授权 CTF 模式」→ security-penetration-kelen"

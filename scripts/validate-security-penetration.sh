@@ -37,6 +37,16 @@ interface = YAML.safe_load(File.read(File.join(skill, "agents/interface.yaml")),
 scope = interface.fetch("inputs").find { |item| item["name"] == "scope" }
 raise "missing scope input" unless scope
 raise "scope.default must be passive" unless scope["default"] == "passive"
+raise "only Read should be required" unless interface.fetch("tools_required") == ["Read"]
+optional_tools = interface.fetch("tools_optional")
+["Shell", "Grep", "Glob", "LS"].each do |tool|
+  raise "missing optional tool #{tool}" unless optional_tools.include?(tool)
+end
+outputs = interface.fetch("outputs").map { |item| item.fetch("name") }
+raise "missing authorization_clarification output" unless outputs.include?("authorization_clarification")
+constraints = interface.fetch("constraints").join("\n")
+raise "missing ClarificationRequest constraint" unless constraints.include?("ClarificationRequest")
+raise "missing CVSS anti-fabrication constraint" unless constraints.include?("证据不足时不得伪造 CVSS 精确评分")
 RUBY
 
 rg -n "上下文覆写|自动放行|核心绕过|实际执行绕过|不施加道德|AI 不承担|真实第三方目标的攻击手册" "$SKILL" && fail "dangerous wording found"
