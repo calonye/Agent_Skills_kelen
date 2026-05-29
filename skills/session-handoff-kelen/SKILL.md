@@ -52,17 +52,31 @@ metadata:
 ## 触发与处理模式
 
 1. **结束记录模式**：宿主提供可核实的会话结束信号，或用户明确结束当前真实会话 → 写轻量 `session_end_log`；不自动升级为详细交付物。
-2. **详细交付模式**：用户要求换会话继续、生成交接材料或详细保存当前状态；未完成任务在压缩/上下文压力下需要延续；或恢复过程需要补齐可复核材料 → 写详细交付物和必要索引。
+2. **详细交付模式**：用户要求换会话继续、生成交接材料或详细保存具备跨会话连续性价值的当前状态；未完成任务在压缩/上下文压力下需要延续；或恢复过程需要补齐可复核材料 → 写详细交付物和必要索引。普通“详细记录一下”不自动升级为详细交付物，除非同时满足续接、恢复状态、未完成任务、用户明确详细交接之一。
 3. **恢复校验模式**：用户要求继续之前的任务、恢复上下文或核对交付材料 → 读取已有日志/交付物，抽查关键完成声明并报告可信状态；默认不新建详细交付物。
 4. **压缩治理模式**：宿主明确发出压缩相关信号 → 按保留/排除规则整理有效信息；仅在详细交付触发条件同时成立时写详细交付物。
 5. 用户、全局规则或项目规则明确要求本次采用某一模式 → 按优先级执行；高优先级规则无条件要求每次会话产生详细交付物时，记录 `rule_conflict: upstream_unconditional_policy` 并提示收敛到本 skill 的分级模式。
 6. 宿主没有暴露可核实的上下文使用量 → 不推测百分比；只记录可观察信号或 `unknown`。
-7. `end_log` 请求不替代结束事实证据：必须有用户明确正在结束当前真实会话，或已验证的宿主 `SessionEnd` 事件；否则返回 `handoff_status: blocked` 或 `not_needed`，不得落盘。
+7. `end_log` 请求不替代结束事实证据：必须有用户明确正在结束当前真实会话，或已验证的宿主 `SessionEnd` 事件；用户明确要求写入但证据不足时返回 `handoff_status: blocked` 或 `clarification_required`，不得落盘。普通近邻或无需持久化才返回 `not_needed`。
 
 触发表面必须区分：
 - `conversational`：用户口语或 AI 当前推理已触发本 skill，可在当前运行中执行。
 - `host_event`：宿主在无用户消息时发出生命周期事件；只有事件路由已实测可调用本 skill 或等价执行入口时，才声明自动执行成立。
 - `rule_route`：已生效的上游规则将当前可观察事件路由到本 skill；仍不替代宿主无消息事件复验。
+
+组合动作规则：
+- `primary_action` 表示本轮主处理动作；`secondary_actions` 表示随同发生但不主导输出的动作。
+- 压缩且未完成任务需要续接 → `primary_action: detailed_handoff`，`secondary_actions: [compression_hygiene]`。
+- 用户明确结束当前真实会话且同时换会话继续 → `primary_action: detailed_handoff`，`secondary_actions: [end_log]`。
+- 单一 `continuity_action` 仅作兼容摘要；遇到组合触发时必须同步写 `primary_action` 和 `secondary_actions`，避免把多个动作压成一个枚举。
+
+宿主事件证据门槛：
+- `host_event` 自动执行成立前，必须记录 `host_event_evidence`：`event_name`、`route_name`、`invocation_result`、`timestamp_or_run_id`、`observed_by`。
+- 缺少 `event_name`、`route_name` 或 `invocation_result` 时，不得声明无消息自动执行已验证；只能标为 `pending` 或 `blocked`。
+
+状态分流：
+- 用户明确要求写入，但缺结束证据、目录依据、授权或恢复资料 → `handoff_status: blocked` 或 `clarification_required`。
+- 普通近邻场景、无续接价值或无需持久化 → `handoff_status: not_needed`。
 
 不触发：
 - 同一会话内的普通问答、普通进度汇报或一次回复结束，且没有宿主会话结束/压缩/恢复信号或明确交接请求 → 不写任何文件。
@@ -140,6 +154,7 @@ metadata:
 - 读取既有结束日志或详细交付物时，默认将其视为线索而非权威事实。
 - 对会影响下一动作的“已完成”“已验证”声明，抽查 1-2 个可复验证据；无法验证时标为 `pending` 或 `partial`。
 - 发现遗漏、失实或过时内容时，报告差异；只有当前模式需要新详细交付且获准写入时，才创建新交付物。
+- 没有可读交付物、索引缺失或索引明显过时时，不得伪造恢复结果；返回 `handoff_status: blocked` 或 `clarification_required`，并提示 fallback：读取目录最近文件或要求用户提供最新交付物路径。
 
 ### 7. 生成续接入口并限定持久化范围
 
@@ -147,12 +162,20 @@ metadata:
 - 带有真实项目文件路径、当前阶段、环境状态或私有计划位置的入口，仅可保留在获准的私有交付物或即时输出中；不得默认建议写入公开文档目录。
 - 用户明确需要可重用模板时，先生成仅含占位符和通用结构的模板候选，并确认存放范围；不得将本次具体入口直接复用为通用模板。
 
+Lite Handoff：普通换会话继续默认先写 30 秒恢复块，再按需要展开完整过程。30 秒恢复块必须包含：
+- 当前目标
+- 最后可信状态
+- 下一步
+- 必验命令或检查入口
+- 阻断风险
+
 ### 8. 写入详细交付物和索引
 
 - 每次详细交付产生一个新的 `context_deliverable_YYYY_MM_DD_session{N}.md`；禁止持续追加覆盖旧文件。
 - 子 Agent 记录与主会话分离，保存任务定义、允许读取/调用范围、输出目标、结论和脱敏证据引用。
 - 附件只在逐次授权后保存，并按所属主会话/子 Agent 目录归类。
 - ISON 索引只存最小导航元数据和引用关系；主题默认采用非敏感短标签或 `redacted`，不内嵌完整对话或私密附件内容。
+- 记录 `index_update_state: updated | skipped_no_hook | failed | not_needed`。自动索引未实现或未触发时，写 `skipped_no_hook`，并在 `post_record_verification` 说明恢复 fallback；不得把未更新索引声明为可靠入口。
 - 旧交付物的归档属于显式维护动作；未获授权不移动或删除文件。
 - 研发文档必须保留落实前后状态：写入前记录为什么写、写到哪里、依据什么授权；写入后记录写了什么、验证了什么、哪些内容被排除或待确认，避免文档与研发过程形成隐性技术债。
 
@@ -174,15 +197,19 @@ metadata:
 
 ```text
 continuity_action: end_log | detailed_handoff | restore_verify | compression_hygiene | not_needed
+primary_action: end_log | detailed_handoff | restore_verify | compression_hygiene | not_needed
+secondary_actions: <none or list of additional continuity actions>
 handoff_status: created | read_verified | clarification_required | not_needed | blocked
 session_role: main | subagent
 invocation_source: conversational | host_event | rule_route
 trigger_reason: explicit_session_end | verified_host_session_end | explicit_continuation | observable_pressure | compact_or_resume | explicit_rule | none
+host_event_evidence: <event_name/route_name/invocation_result/timestamp_or_run_id/observed_by or pending>
 rule_conflict: none | upstream_unconditional_policy
 documentation_root: <authorized R&D docs root or pending>
 session_end_log_path: <absolute path or pending or not_needed>
 deliverable_path: <absolute path or pending>
-index_path: <absolute path or pending>
+index_paths: <none or list of local/root indexes touched or checked>
+index_update_state: updated | skipped_no_hook | failed | not_needed
 interaction_mode: native_tool | text_fallback | not_needed
 native_tool_candidate: <candidate tool or none>
 native_tool_status: presented | not_exposed | invocation_rejected | unsupported_question_type | not_needed
@@ -191,9 +218,13 @@ capability_evidence: <tool exposure or invocation result evidence>
 reasoning_gate: <goal/evidence_gap/risk/decision_basis>
 decision_options: <none or options with recommended marker and reason>
 architecture_boundary: <protocol/template/index/attachment/runtime-record separation>
+decision_envelope: <status fields, actions, trigger evidence and persistence decision>
+artifacts: <created/read file paths, index paths and attachment refs>
 rnd_record_state: <pre_record_basis and post_record_verification>
 summary_mode: none | authorized_redacted
-attachments: none | authorized_references
+attachment_status: none | referenced | saved
+attachment_authorization: not_requested | pending_authorization | authorized
+attachment_refs: <none or authorized relative paths>
 persistence_scope: output_only | private_deliverable | authorized_generic_template
 next_entry: <new-session continuation instruction>
 verification: <checked items and unresolved risks>

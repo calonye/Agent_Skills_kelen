@@ -17,6 +17,7 @@ inputs:
   - name: host_context_signal
     type: string
     description: "宿主明确提供的上下文状态：none / pressure / compact / ending / measured；不可推测百分比"
+    enum: ["none", "pressure", "compact", "ending", "measured"]
     default: "none"
   - name: continuation_required
     type: boolean
@@ -25,16 +26,37 @@ inputs:
   - name: requested_mode
     type: string
     description: "请求模式：auto / end_log / detailed_handoff / restore_verify / compression_hygiene"
+    enum: ["auto", "end_log", "detailed_handoff", "restore_verify", "compression_hygiene"]
     default: "auto"
   - name: invocation_source
     type: string
     description: "调用来源：conversational / host_event / rule_route；host_event 必须有运行证据"
+    enum: ["conversational", "host_event", "rule_route"]
     default: "conversational"
+  - name: end_signal
+    type: string
+    description: "结束证据：none / user_closed / verified_host_session_end；请求 end_log 不替代结束证据"
+    enum: ["none", "user_closed", "verified_host_session_end"]
+    default: "none"
+  - name: host_event_evidence
+    type: object
+    description: "host_event 自动执行证据：event_name、route_name、invocation_result、timestamp_or_run_id、observed_by；缺核心项不得声明自动执行成立"
+    required: false
   - name: authorization
     type: object
     description: "摘要、完整子 Agent 内容和附件的逐次授权状态"
     required: false
+  - name: authorization_scope
+    type: object
+    description: "分项授权：summary / full_child_agent_content / attachments；默认均为未授权"
+    required: false
 outputs:
+  - name: decision_envelope
+    type: object
+    description: "运行状态 envelope：continuity_action、primary_action、secondary_actions、handoff_status、trigger evidence、host_event_evidence、persistence_scope"
+  - name: artifacts
+    type: object
+    description: "落盘或读取的 artifact：session_end_log_path、deliverable_path、index_paths、child_agent_records、attachment_refs"
   - name: session_end_log
     type: markdown
     description: 每个真实结束会话的轻量日志；不承载详细交付内容
@@ -49,7 +71,7 @@ outputs:
     description: 新会话可读取的续接入口；默认不作为仓库通用模板持久化
   - name: handoff_decision
     type: object
-    description: "处理模式、触发原因、规则冲突与持久化范围：continuity_action / trigger_reason / rule_conflict / persistence_scope"
+    description: "兼容旧输出的处理裁定；新实现优先读取 decision_envelope"
   - name: recovery_assessment
     type: markdown
     description: 恢复读取时对已有记录完成声明的抽查结果

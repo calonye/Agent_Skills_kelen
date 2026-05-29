@@ -12,7 +12,7 @@
 
 ### 技能关系
 
-每个 skill 完全独立可用，以下箭头仅标注可选搭配关系：
+每个公开 skill 可作为独立运行时包安装和触发，以下箭头仅标注可选搭配关系：
 
 ```text
 adversarial-successor-audit-kelen ──→ 可选搭配 ←── dialectical-self-review-kelen
@@ -41,15 +41,17 @@ ls ~/.claude/skills/dialectical-self-review-kelen
 ls ~/.claude/skills/skill-self-evolution-kelen
 ls ~/.claude/skills/security-penetration-kelen
 
-# 提交前验证
+# 维护者本地质量检查（不是 skill 使用依赖，也不是 PR 合并承诺）
 bash scripts/validate-all.sh
 
-# 或分别验证重点 skill
+# 或分别检查重点 skill
 bash scripts/validate-dialectical-self-review.sh
 bash scripts/validate-security-penetration.sh
 ```
 
 `install.sh` 会在各 skill 目录生成本地 `update.sh`，这是被 `.gitignore` 排除的同步脚本；看到它出现在 ignored 列表中是预期行为。
+
+验证脚本只覆盖确定性不变量，不能替代维护者对通用性、结构边界和长期维护成本的判断。外部 PR 是候选输入；不符合本仓库质量方向、过于个性化或无法抽象为通用能力的改动，可以直接驳回。优先接受修复确定性错误、改善公开入口一致性、降低维护成本的改动；谨慎接受个性化偏好、局部话术或单一场景规则堆叠。
 
 ### 触发词
 
@@ -78,7 +80,8 @@ Agent_Skills_kelen/
 ├── scripts/
 │   ├── validate-all.sh
 │   ├── validate-dialectical-self-review.sh
-│   └── validate-security-penetration.sh
+│   ├── validate-security-penetration.sh
+│   └── validation/                       ← 维护者本地质量检查分层脚本
 │
 └── skills/                                ← 项目产物层
     ├── adversarial-successor-audit-kelen/
@@ -96,7 +99,7 @@ Agent_Skills_kelen/
 
 每个 skill 内含：`SKILL.md`（路由 + 流程骨架）+ `agents/interface.yaml`（接口声明）+ `references/`（详解、判据、案例）
 
-默认公开 skill 以 `install.sh` 的 `PUBLIC_SKILLS` 白名单和上方技能清单为准；未列入白名单的历史兼容或孵化中目录不通过默认安装入口部署。
+默认公开 skill 以 `install.sh` 的 `PUBLIC_SKILLS` 白名单和上方技能清单为准；未列入白名单的历史兼容或孵化中目录不通过默认安装入口部署。源码中被跟踪的孵化 skill 仍不得承载私有运行记录、真实交付物或附件内容。
 
 ### 技能自我进化用法
 
@@ -150,7 +153,7 @@ Flag 目标：<要证明的漏洞、弱点或安全性质>
 
 ## 技术规范
 
-- Skill 产物采用结构化目录、渐进披露和本仓库验证脚本作为发布门禁
+- Skill 产物采用结构化目录、渐进披露，并使用维护者本地验证脚本检查确定性发布不变量
 - 版本管理采用 [语义化版本号 (SemVer)](https://semver.org/lang/zh-CN/)
 - 语言约定：中文为主，英文为辅
 - Commit 格式：`<type>: <中文简述> [en: <english>]`

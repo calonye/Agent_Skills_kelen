@@ -27,9 +27,15 @@ parentRule: SKILL.md
 
 同一会话内的普通问答结束或普通进度汇报不触发写入。真实会话结束但不存在续接目的时，仅写轻量结束日志，不创建详细交付物。
 
+组合触发用 `primary_action` 和 `secondary_actions` 表达，不把多个动作压成单一枚举：
+- 压缩治理同时需要续接 → `primary_action: detailed_handoff`，`secondary_actions: [compression_hygiene]`。
+- 结束当前真实会话同时换会话继续 → `primary_action: detailed_handoff`，`secondary_actions: [end_log]`。
+- 单一 `continuity_action` 只作为兼容摘要；详细交付物必须保留组合字段。
+
 自动触发边界：
 - 用户表达“结束这个会话”“换会话继续”“恢复上次工作”等口语时，已安装 skill 的语义触发可执行本协议。
 - 无用户消息的 `SessionEnd`、压缩或恢复事件只有在宿主事件路由已验证能够调用本协议或等价执行入口时，才可声明自动执行；仅安装 skill 不构成事件触发证据。
+- `host_event` 成立必须记录 `host_event_evidence`：`event_name`、`route_name`、`invocation_result`、`timestamp_or_run_id`、`observed_by`。缺少事件名、路由名或调用结果时，自动执行状态只能是 `pending` 或 `blocked`。
 
 ## 优先级
 
@@ -38,6 +44,11 @@ parentRule: SKILL.md
 - 宿主自带的上下文管理预设优先于自造阈值。
 - 规则冲突改变存储位置、隐私范围或内容删减时，先提出澄清。
 - 高优先级规则无条件要求每次会话产生详细交付物，但只需要结束记录时，标记 `rule_conflict: upstream_unconditional_policy`；该冲突应收敛为轻量日志 + 条件式详细交付。
+
+状态分流：
+- 用户明确要求写入但缺结束证据、目录依据、恢复资料或授权 → `blocked` 或 `clarification_required`。
+- 普通近邻、无需持久化或无跨会话价值 → `not_needed`。
+- 不得把“缺证据但用户想写”降级成 `not_needed`。
 
 ## 决策前推理闸门
 
@@ -56,7 +67,7 @@ parentRule: SKILL.md
 
 ## 轻量结束日志
 
-结束日志用于证明会话已结束和定位后续资料，不承担详细交付功能。写入前必须取得 `user_closed` 或 `verified_host_session_end` 证据；证据未知时返回阻断或不需要写入。只写：会话标识、非敏感主题标签或 `redacted`、结束原因或可观察信号、结束状态、详细交付物引用（若存在）、未解决风险是否存在、验证状态和更新时间。
+结束日志用于证明会话已结束和定位后续资料，不承担详细交付功能。写入前必须取得 `user_closed` 或 `verified_host_session_end` 证据；用户明确要求写入但证据未知时返回 `blocked` 或 `clarification_required`，普通近邻或无需持久化才返回 `not_needed`。只写：会话标识、非敏感主题标签或 `redacted`、结束原因或可观察信号、结束状态、详细交付物引用（若存在）、未解决风险是否存在、验证状态和更新时间。
 
 不得写入：完整对话、详细思路、未授权摘要、完整提示词、子 Agent 原文、附件内容或敏感数据。
 
@@ -71,6 +82,17 @@ parentRule: SKILL.md
 - 子 Agent 任务与结论引用。
 
 不重新叙述完整思路，不自动压缩用户内容。
+
+Lite Handoff 默认先提供 30 秒恢复块：
+- 当前目标
+- 最后可信状态
+- 下一步
+- 必验命令或检查入口
+- 阻断风险
+
+只有涉及子 Agent、附件、授权摘要、宿主事件、争议验证、索引修复或多目标续接时，才展开完整协议章节。
+
+详细交付前置门槛：普通“详细记录一下”不自动进入详细交付；必须满足续接、恢复状态、未完成任务、用户明确详细交接之一，才创建详细交付物。
 
 ### 授权后：脱敏摘要
 
@@ -103,6 +125,7 @@ parentRule: SKILL.md
 - 读取结束日志或交付物时，将其视为待核验的导航线索，不作为事实终点。
 - 影响下一动作的完成项或验证声明，抽查 1-2 项可复现证据；结果记录为 `verified`、`partial` 或 `pending`。
 - 只有在恢复后需要形成新续接状态或用户要求更新详细材料时，才新建详细交付物。
+- 无可读交付物、索引缺失或索引明显过时时，报告 `blocked` 或 `clarification_required`；不得伪造恢复结果。可用 fallback 是读取目录最近文件或要求用户提供最新交付物路径。
 
 ## 续接入口与模板持久化
 
@@ -117,6 +140,11 @@ parentRule: SKILL.md
 - 仓库即项目根且研发产出物需与公开内容隔离时，结束日志写入 `Project/Docs/记录文档/会话日志/`，详细交付物写入 `Project/Docs/记录文档/上下文交付物/`。
 - 项目本身以 `Docs/` 管理研发产出物时，结束日志写入 `<project>/Docs/记录文档/会话日志/`，详细交付物写入 `<project>/Docs/记录文档/上下文交付物/`。
 - 不得将具体会话交付物写入面向外部的仓库公开文档区域；公开文档只可承载经授权、参数化且无本次任务状态的模板。
+
+索引更新状态：
+- 写入交付物后记录 `index_update_state: updated | skipped_no_hook | failed`。
+- 自动索引未实现或未触发时写 `skipped_no_hook`，并在 `post_record_verification` 给出恢复 fallback。
+- 索引明显过时时，不得把 `index.ison` 当作最新恢复入口；应同时检查目录最近文件。
 
 ## 交互能力适配
 
